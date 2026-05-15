@@ -9,6 +9,8 @@ import {
 
 const router: IRouter = Router();
 
+const DEMO_USER_ID = 1;
+
 router.get("/skills", async (_req, res): Promise<void> => {
   const skills = await db.select().from(skillsTable);
   res.json(skills.map(s => ({
@@ -19,15 +21,10 @@ router.get("/skills", async (_req, res): Promise<void> => {
   })));
 });
 
-router.get("/users/me/skills", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
+router.get("/users/me/skills", async (_req, res): Promise<void> => {
   const rows = await db.select().from(userSkillsTable)
     .leftJoin(skillsTable, eq(userSkillsTable.skillId, skillsTable.id))
-    .where(eq(userSkillsTable.userId, userId));
+    .where(eq(userSkillsTable.userId, DEMO_USER_ID));
   const result = rows.map(r => ({
     id: r.user_skills.id,
     userId: r.user_skills.userId,
@@ -45,11 +42,6 @@ router.get("/users/me/skills", async (req, res): Promise<void> => {
 });
 
 router.post("/users/me/skills", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const parsed = AddMySkillBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -61,7 +53,7 @@ router.post("/users/me/skills", async (req, res): Promise<void> => {
     return;
   }
   const [userSkill] = await db.insert(userSkillsTable).values({
-    userId,
+    userId: DEMO_USER_ID,
     skillId: parsed.data.skillId,
     level: parsed.data.level,
   }).returning();
@@ -81,11 +73,6 @@ router.post("/users/me/skills", async (req, res): Promise<void> => {
 });
 
 router.delete("/users/me/skills/:skillId", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const raw = Array.isArray(req.params.skillId) ? req.params.skillId[0] : req.params.skillId;
   const params = RemoveMySkillParams.safeParse({ skillId: parseInt(raw, 10) });
   if (!params.success) {
@@ -93,7 +80,7 @@ router.delete("/users/me/skills/:skillId", async (req, res): Promise<void> => {
     return;
   }
   await db.delete(userSkillsTable).where(
-    and(eq(userSkillsTable.userId, userId), eq(userSkillsTable.skillId, params.data.skillId))
+    and(eq(userSkillsTable.userId, DEMO_USER_ID), eq(userSkillsTable.skillId, params.data.skillId))
   );
   res.sendStatus(204);
 });

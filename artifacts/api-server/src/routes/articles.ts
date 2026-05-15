@@ -14,6 +14,8 @@ import {
 
 const router: IRouter = Router();
 
+const DEMO_USER_ID = 1;
+
 async function serializeArticle(a: typeof articlesTable.$inferSelect) {
   const [author] = await db.select().from(usersTable).where(eq(usersTable.id, a.authorId));
   return {
@@ -45,17 +47,12 @@ router.get("/articles", async (req, res): Promise<void> => {
 });
 
 router.post("/articles", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const parsed = CreateArticleBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const [article] = await db.insert(articlesTable).values({ ...parsed.data, authorId: userId }).returning();
+  const [article] = await db.insert(articlesTable).values({ ...parsed.data, authorId: DEMO_USER_ID }).returning();
   res.status(201).json(await serializeArticle(article));
 });
 

@@ -17,6 +17,8 @@ import {
 
 const router: IRouter = Router();
 
+const DEMO_USER_ID = 1;
+
 function serializeScholarship(s: typeof scholarshipsTable.$inferSelect) {
   return {
     id: s.id,
@@ -112,11 +114,6 @@ router.post("/scholarships/:id/apply", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Invalid ID" });
     return;
   }
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const parsed = ApplyForScholarshipBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -128,7 +125,7 @@ router.post("/scholarships/:id/apply", async (req, res): Promise<void> => {
     return;
   }
   const [application] = await db.insert(scholarshipApplicationsTable).values({
-    userId,
+    userId: DEMO_USER_ID,
     scholarshipId: params.data.id,
     statement: parsed.data.statement,
     status: "pending",
@@ -145,15 +142,10 @@ router.post("/scholarships/:id/apply", async (req, res): Promise<void> => {
   });
 });
 
-router.get("/applications", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
+router.get("/applications", async (_req, res): Promise<void> => {
   const rows = await db.select().from(scholarshipApplicationsTable)
     .leftJoin(scholarshipsTable, eq(scholarshipApplicationsTable.scholarshipId, scholarshipsTable.id))
-    .where(eq(scholarshipApplicationsTable.userId, userId));
+    .where(eq(scholarshipApplicationsTable.userId, DEMO_USER_ID));
   const result = rows.map(r => ({
     id: r.scholarship_applications.id,
     userId: r.scholarship_applications.userId,

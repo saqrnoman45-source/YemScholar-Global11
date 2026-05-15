@@ -19,6 +19,8 @@ import {
 
 const router: IRouter = Router();
 
+const DEMO_USER_ID = 1;
+
 function serializeCourse(c: typeof coursesTable.$inferSelect) {
   return {
     id: c.id,
@@ -112,18 +114,13 @@ router.post("/courses/:id/enroll", async (req, res): Promise<void> => {
     res.status(400).json({ error: "Invalid ID" });
     return;
   }
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const [course] = await db.select().from(coursesTable).where(eq(coursesTable.id, params.data.id));
   if (!course) {
     res.status(404).json({ error: "Course not found" });
     return;
   }
   const [enrollment] = await db.insert(enrollmentsTable).values({
-    userId,
+    userId: DEMO_USER_ID,
     courseId: params.data.id,
     progress: 0,
     status: "active",
@@ -141,15 +138,10 @@ router.post("/courses/:id/enroll", async (req, res): Promise<void> => {
   });
 });
 
-router.get("/enrollments", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
+router.get("/enrollments", async (_req, res): Promise<void> => {
   const rows = await db.select().from(enrollmentsTable)
     .leftJoin(coursesTable, eq(enrollmentsTable.courseId, coursesTable.id))
-    .where(eq(enrollmentsTable.userId, userId));
+    .where(eq(enrollmentsTable.userId, DEMO_USER_ID));
   const result = rows.map(r => ({
     id: r.enrollments.id,
     userId: r.enrollments.userId,
