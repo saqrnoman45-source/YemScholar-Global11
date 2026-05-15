@@ -16,11 +16,6 @@ import { scholarshipsTable as st } from "@workspace/db";
 const router: IRouter = Router();
 
 router.get("/admin/stats", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const [totalUsersRow] = await db.select({ count: count() }).from(usersTable);
   const [totalCoursesRow] = await db.select({ count: count() }).from(coursesTable);
   const [totalEnrollmentsRow] = await db.select({ count: count() }).from(enrollmentsTable);
@@ -46,11 +41,6 @@ router.get("/admin/stats", async (req, res): Promise<void> => {
 });
 
 router.get("/admin/users", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const users = await db.select().from(usersTable);
   res.json(ListAdminUsersResponse.parse(users.map(u => ({
     id: u.id,
@@ -92,11 +82,6 @@ router.patch("/admin/users/:id", async (req, res): Promise<void> => {
 });
 
 router.get("/admin/applications", async (req, res): Promise<void> => {
-  const userId = req.session?.userId;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const rows = await db.select().from(scholarshipApplicationsTable)
     .leftJoin(scholarshipsTable, eq(scholarshipApplicationsTable.scholarshipId, scholarshipsTable.id));
   const result = rows.map(r => ({
