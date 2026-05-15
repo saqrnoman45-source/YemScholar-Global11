@@ -1,16 +1,26 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useListArticles } from "@workspace/api-client-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import { AppLayout } from "@/components/layout/app-layout";
+import { FileText, Clock, Search } from "lucide-react";
 import { format } from "date-fns";
-import { FileText, Clock } from "lucide-react";
+
+const topicColors: Record<string, string> = {
+  "AI":             "bg-violet-500/15 text-violet-300",
+  "Career":         "bg-rose-500/15 text-rose-300",
+  "Research":       "bg-amber-500/15 text-amber-300",
+  "Technology":     "bg-sky-500/15 text-sky-300",
+  "Science":        "bg-emerald-500/15 text-emerald-300",
+  default:          "bg-zinc-700/50 text-zinc-300",
+};
+
+function getTopicColor(t: string) {
+  return topicColors[t] ?? topicColors.default;
+}
 
 export default function Articles() {
   const [search, setSearch] = useState("");
-  const [topic, setTopic] = useState<string>("");
+  const [topic, setTopic] = useState("");
 
   const { data: articles, isLoading } = useListArticles({
     search: search || undefined,
@@ -18,83 +28,87 @@ export default function Articles() {
   });
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight">Research & Insights</h1>
-          <p className="text-muted-foreground mt-2">Explore the latest articles, research papers, and academic insights.</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-        <div className="w-full md:w-1/3">
-          <Input 
-            placeholder="Search articles..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="w-full md:w-1/4">
-          <Input 
-            placeholder="Filter by topic..." 
+    <AppLayout pageTitle="Research & Insights" pageSubtitle="Explore the latest articles, research papers, and academic insights.">
+      <div className="p-6 space-y-6">
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+            <input
+              type="search"
+              placeholder="Search articles..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-700/70 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors"
+            />
+          </div>
+          <input
+            type="search"
+            placeholder="Filter by topic..."
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
+            className="bg-zinc-900 border border-zinc-700/70 rounded-xl px-4 py-2 text-sm text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors w-full sm:w-48"
           />
         </div>
-      </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="flex flex-col">
-              <CardHeader>
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-24 w-full" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles?.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-muted-foreground">
-              No articles found matching your criteria.
-            </div>
-          ) : (
-            articles?.map((article) => (
+        {/* Grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 animate-pulse space-y-3">
+                <div className="h-4 bg-zinc-800 rounded w-1/4" />
+                <div className="h-5 bg-zinc-800 rounded w-3/4" />
+                <div className="h-3 bg-zinc-800 rounded w-full" />
+                <div className="h-3 bg-zinc-800 rounded w-2/3" />
+              </div>
+            ))}
+          </div>
+        ) : articles?.length === 0 ? (
+          <div className="text-center py-20 text-zinc-500">
+            <FileText className="w-10 h-10 mx-auto mb-3 opacity-30" />
+            No articles found matching your criteria.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {articles?.map((article) => (
               <Link key={article.id} href={`/articles/${article.id}`}>
-                <Card className="h-full flex flex-col hover:border-primary/50 transition-colors cursor-pointer group border-border/60">
-                  {article.thumbnailUrl ? (
-                    <div className="h-48 overflow-hidden bg-muted">
-                      <img src={article.thumbnailUrl} alt={article.title} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30 transition-all cursor-pointer group h-full flex flex-col">
+                  {article.thumbnailUrl && (
+                    <div className="h-44 overflow-hidden bg-zinc-800">
+                      <img
+                        src={article.thumbnailUrl}
+                        alt={article.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
                     </div>
-                  ) : null}
-                  <CardHeader>
-                    <div className="mb-2">
-                      <Badge variant="secondary" className="font-normal">{article.topic}</Badge>
+                  )}
+
+                  <div className="p-5 flex flex-col flex-1">
+                    <div className="mb-3">
+                      <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${getTopicColor(article.topic)}`}>
+                        {article.topic}
+                      </span>
                     </div>
-                    <CardTitle className="line-clamp-2 text-xl font-serif group-hover:text-primary transition-colors">{article.title}</CardTitle>
-                    <CardDescription className="mt-2 text-foreground font-medium">By {article.authorName}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-muted-foreground text-sm line-clamp-3">{article.summary}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between text-xs text-muted-foreground pt-4 border-t border-border/40">
-                    <div>{format(new Date(article.publishedAt), 'MMM d, yyyy')}</div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{article.readTime} min read</span>
+
+                    <h3 className="font-semibold text-white text-sm line-clamp-2 mb-1.5 group-hover:text-violet-300 transition-colors">
+                      {article.title}
+                    </h3>
+                    <p className="text-xs text-zinc-500 mb-3">By {article.authorName}</p>
+                    <p className="text-xs text-zinc-400 line-clamp-3 flex-1">{article.summary}</p>
+
+                    <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-zinc-800 mt-4 pt-3">
+                      <span>{format(new Date(article.publishedAt), "MMM d, yyyy")}</span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5" />{article.readTime} min read
+                      </span>
                     </div>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </Link>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </AppLayout>
   );
 }

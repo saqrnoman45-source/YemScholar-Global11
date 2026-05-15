@@ -1,96 +1,87 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useListScholarships } from "@workspace/api-client-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, DollarSign, Building } from "lucide-react";
+import { AppLayout } from "@/components/layout/app-layout";
+import { GraduationCap, Calendar, DollarSign, Building, Search } from "lucide-react";
 import { format } from "date-fns";
 
 export default function Scholarships() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("all");
 
   const { data: scholarships, isLoading } = useListScholarships({
     search: search || undefined,
-    category: category !== "all" ? category : undefined,
   });
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight">Scholarships</h1>
-          <p className="text-muted-foreground mt-2">Discover funding opportunities to support your academic journey.</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-        <div className="w-full md:w-1/3">
-          <Input 
-            placeholder="Search scholarships..." 
+    <AppLayout pageTitle="Scholarships" pageSubtitle="Discover funding opportunities to support your academic journey.">
+      <div className="p-6 space-y-6">
+        {/* Search */}
+        <div className="relative max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+          <input
+            type="search"
+            placeholder="Search scholarships..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-zinc-900 border border-zinc-700/70 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors"
           />
         </div>
-      </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-2" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {scholarships?.length === 0 ? (
-            <div className="col-span-full text-center py-12 text-muted-foreground">
-              No scholarships found matching your criteria.
-            </div>
-          ) : (
-            scholarships?.map((scholarship) => (
-              <Link key={scholarship.id} href={`/scholarships/${scholarship.id}`}>
-                <Card className="h-full flex flex-col hover:border-primary/50 transition-colors cursor-pointer group">
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2 gap-2">
-                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">{scholarship.category}</Badge>
+        {/* Grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 animate-pulse space-y-3">
+                <div className="h-4 bg-zinc-800 rounded w-1/3" />
+                <div className="h-5 bg-zinc-800 rounded w-3/4" />
+                <div className="h-3 bg-zinc-800 rounded w-full" />
+                <div className="h-3 bg-zinc-800 rounded w-2/3" />
+              </div>
+            ))}
+          </div>
+        ) : scholarships?.length === 0 ? (
+          <div className="text-center py-20 text-zinc-500">
+            <GraduationCap className="w-10 h-10 mx-auto mb-3 opacity-30" />
+            No scholarships found matching your criteria.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {scholarships?.map((s) => (
+              <Link key={s.id} href={`/scholarships/${s.id}`}>
+                <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30 transition-all cursor-pointer group h-full flex flex-col">
+                  <div className="mb-3">
+                    <span className="text-[11px] px-2.5 py-1 rounded-full font-medium bg-sky-500/15 text-sky-400 border border-sky-500/20">
+                      {s.category}
+                    </span>
+                  </div>
+
+                  <h3 className="font-semibold text-white text-sm line-clamp-2 mb-1.5 group-hover:text-violet-300 transition-colors">
+                    {s.title}
+                  </h3>
+
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-500 mb-3">
+                    <Building className="w-3.5 h-3.5" />
+                    <span>{s.provider}</span>
+                  </div>
+
+                  <p className="text-xs text-zinc-400 line-clamp-3 flex-1">{s.description}</p>
+
+                  <div className="flex items-center justify-between text-xs border-t border-zinc-800 mt-4 pt-3">
+                    <div className="flex items-center gap-1.5 font-semibold text-emerald-400">
+                      <DollarSign className="w-3.5 h-3.5" />
+                      <span>{s.amount ? `$${s.amount.toLocaleString()}` : "Varies"}</span>
                     </div>
-                    <CardTitle className="line-clamp-2 text-xl font-serif group-hover:text-primary transition-colors">{scholarship.title}</CardTitle>
-                    <CardDescription className="flex items-center gap-1 mt-1">
-                      <Building className="h-3 w-3" />
-                      <span className="font-medium text-foreground">{scholarship.provider}</span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-muted-foreground text-sm line-clamp-3">{scholarship.description}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between text-sm text-muted-foreground border-t pt-4">
-                    <div className="flex items-center gap-1 font-medium text-foreground">
-                      <DollarSign className="h-4 w-4 text-green-600" />
-                      <span>{scholarship.amount ? `$${scholarship.amount.toLocaleString()}` : 'Varies'}</span>
+                    <div className="flex items-center gap-1.5 text-zinc-500">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{s.deadline ? format(new Date(s.deadline), "MMM d, yyyy") : "Rolling"}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{scholarship.deadline ? format(new Date(scholarship.deadline), 'MMM d, yyyy') : 'Rolling'}</span>
-                    </div>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </Link>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </AppLayout>
   );
 }

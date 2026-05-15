@@ -1,165 +1,174 @@
 import { useState } from "react";
-import { useGetMySkills, useListSkills, useAddMySkill, useRemoveMySkill } from "@workspace/api-client-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetMySkills, useListSkills, useAddMySkill, useRemoveMySkill, getGetMySkillsQueryKey } from "@workspace/api-client-react";
+import { AppLayout } from "@/components/layout/app-layout";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, Zap } from "lucide-react";
+import { Trash2, Plus, Sparkles, ChevronDown } from "lucide-react";
 import { UserSkillInputLevel } from "@workspace/api-zod/src/generated/types/userSkillInputLevel";
 import { useQueryClient } from "@tanstack/react-query";
-import { getGetMySkillsQueryKey } from "@workspace/api-client-react";
+
+const levelConfig: Record<string, { label: string; color: string; bar: string }> = {
+  beginner:     { label: "Beginner",     color: "bg-sky-500/15 text-sky-400 border-sky-500/25",         bar: "bg-sky-500" },
+  intermediate: { label: "Intermediate", color: "bg-amber-500/15 text-amber-400 border-amber-500/25",   bar: "bg-amber-500" },
+  advanced:     { label: "Advanced",     color: "bg-violet-500/15 text-violet-400 border-violet-500/25", bar: "bg-violet-500" },
+  expert:       { label: "Expert",       color: "bg-rose-500/15 text-rose-400 border-rose-500/25",       bar: "bg-rose-500" },
+};
+
+const levelWidths: Record<string, string> = {
+  beginner: "w-1/4", intermediate: "w-2/4", advanced: "w-3/4", expert: "w-full",
+};
 
 export default function Skills() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: mySkills, isLoading: loadingMySkills } = useGetMySkills();
-  const { data: allSkills, isLoading: loadingAllSkills } = useListSkills();
-  
+  const { data: allSkills } = useListSkills();
+
   const addSkillMutation = useAddMySkill();
   const removeSkillMutation = useRemoveMySkill();
 
-  const [selectedSkillId, setSelectedSkillId] = useState<string>("");
+  const [selectedSkillId, setSelectedSkillId] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<UserSkillInputLevel>("beginner");
 
-  const unaddedSkills = allSkills?.filter(
-    s => !mySkills?.some(ms => ms.skillId === s.id)
-  ) || [];
+  const unaddedSkills = allSkills?.filter((s) => !mySkills?.some((ms) => ms.skillId === s.id)) || [];
 
-  const handleAddSkill = () => {
+  const handleAdd = () => {
     if (!selectedSkillId) return;
-    
-    addSkillMutation.mutate({
-      data: {
-        skillId: parseInt(selectedSkillId, 10),
-        level: selectedLevel
+    addSkillMutation.mutate(
+      { data: { skillId: parseInt(selectedSkillId, 10), level: selectedLevel } },
+      {
+        onSuccess: () => {
+          toast({ title: "Skill added" });
+          setSelectedSkillId("");
+          queryClient.invalidateQueries({ queryKey: getGetMySkillsQueryKey() });
+        },
       }
-    }, {
-      onSuccess: () => {
-        toast({ title: "Skill added successfully" });
-        setSelectedSkillId("");
-        queryClient.invalidateQueries({ queryKey: getGetMySkillsQueryKey() });
-      }
-    });
+    );
   };
 
-  const handleRemoveSkill = (id: number) => {
+  const handleRemove = (id: number) => {
     removeSkillMutation.mutate({ id }, {
       onSuccess: () => {
         toast({ title: "Skill removed" });
         queryClient.invalidateQueries({ queryKey: getGetMySkillsQueryKey() });
-      }
+      },
     });
   };
 
-  const levelColors: Record<string, string> = {
-    beginner: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300",
-    intermediate: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300",
-    advanced: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300",
-    expert: "bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300",
-  };
-
   return (
-    <div className="container mx-auto py-10 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-bold tracking-tight">My Skills Profile</h1>
-        <p className="text-muted-foreground mt-2">Track your competencies and demonstrate your growth.</p>
-      </div>
+    <AppLayout pageTitle="Skills Profile" pageSubtitle="Track your competencies and demonstrate your growth.">
+      <div className="p-6">
+        <div className="grid lg:grid-cols-3 gap-6">
 
-      <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1">
-          <Card className="sticky top-24">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Plus className="h-5 w-5" /> Add New Skill
-              </CardTitle>
-              <CardDescription>Select a skill from our taxonomy to add to your profile.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Skill</label>
-                <Select value={selectedSkillId} onValueChange={setSelectedSkillId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a skill" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {unaddedSkills.map(skill => (
-                      <SelectItem key={skill.id} value={skill.id.toString()}>{skill.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Proficiency Level</label>
-                <Select value={selectedLevel} onValueChange={(v) => setSelectedLevel(v as UserSkillInputLevel)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
-                    <SelectItem value="expert">Expert</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          {/* Add skill panel */}
+          <div className="lg:col-span-1">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sticky top-20">
+              <h2 className="font-semibold text-white text-sm flex items-center gap-2 mb-1">
+                <Plus className="w-4 h-4 text-violet-400" /> Add New Skill
+              </h2>
+              <p className="text-xs text-zinc-500 mb-5">Select a skill to add to your profile.</p>
 
-              <Button 
-                className="w-full mt-4" 
-                disabled={!selectedSkillId || addSkillMutation.isPending}
-                onClick={handleAddSkill}
-              >
-                {addSkillMutation.isPending ? "Adding..." : "Add to Profile"}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Zap className="h-5 w-5 text-amber-500" /> Current Competencies
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {loadingMySkills ? (
-                <div>Loading skills...</div>
-              ) : mySkills?.length === 0 ? (
-                <div className="text-center py-10 text-muted-foreground border border-dashed rounded-lg">
-                  You haven't added any skills to your profile yet.
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-medium text-zinc-400 block mb-1.5">Skill</label>
+                  <div className="relative">
+                    <select
+                      value={selectedSkillId}
+                      onChange={(e) => setSelectedSkillId(e.target.value)}
+                      className="w-full appearance-none bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-violet-500/60 transition-colors pr-8"
+                    >
+                      <option value="">Select a skill...</option>
+                      {unaddedSkills.map((s) => (
+                        <option key={s.id} value={s.id.toString()}>{s.name}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                  </div>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {mySkills?.map(userSkill => (
-                    <div key={userSkill.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors">
-                      <div>
-                        <div className="font-medium">{userSkill.skill?.name}</div>
-                        <div className="text-sm text-muted-foreground">{userSkill.skill?.category}</div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Badge variant="outline" className={`${levelColors[userSkill.level]} capitalize`}>
-                          {userSkill.level}
-                        </Badge>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-destructive hover:bg-destructive/10"
-                          onClick={() => handleRemoveSkill(userSkill.id)}
-                          disabled={removeSkillMutation.isPending}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+
+                <div>
+                  <label className="text-xs font-medium text-zinc-400 block mb-1.5">Proficiency Level</label>
+                  <div className="relative">
+                    <select
+                      value={selectedLevel}
+                      onChange={(e) => setSelectedLevel(e.target.value as UserSkillInputLevel)}
+                      className="w-full appearance-none bg-zinc-800 border border-zinc-700 rounded-xl px-3 py-2.5 text-sm text-zinc-200 focus:outline-none focus:border-violet-500/60 transition-colors pr-8"
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                      <option value="expert">Expert</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleAdd}
+                  disabled={!selectedSkillId || addSkillMutation.isPending}
+                  className="w-full bg-violet-600 hover:bg-violet-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
+                >
+                  {addSkillMutation.isPending ? "Adding..." : "Add to Profile"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Skills list */}
+          <div className="lg:col-span-2">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+              <h2 className="font-semibold text-white text-sm flex items-center gap-2 mb-5">
+                <Sparkles className="w-4 h-4 text-amber-400" /> Current Competencies
+              </h2>
+
+              {loadingMySkills ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-16 bg-zinc-800 rounded-xl animate-pulse" />
                   ))}
                 </div>
+              ) : mySkills?.length === 0 ? (
+                <div className="text-center py-14 border border-dashed border-zinc-700 rounded-xl">
+                  <Sparkles className="w-8 h-8 mx-auto mb-2 text-zinc-600" />
+                  <p className="text-zinc-500 text-sm">No skills added yet.</p>
+                  <p className="text-zinc-600 text-xs mt-1">Add skills from the panel to get started.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {mySkills?.map((userSkill) => {
+                    const cfg = levelConfig[userSkill.level] ?? levelConfig.beginner;
+                    return (
+                      <div
+                        key={userSkill.id}
+                        className="flex items-center gap-4 p-4 bg-zinc-800/40 border border-zinc-700/50 rounded-xl hover:border-zinc-600 transition-colors"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <p className="text-sm font-medium text-white">{userSkill.skill?.name}</p>
+                            <span className={`text-[11px] px-2 py-0.5 rounded-full border font-medium capitalize ${cfg.color}`}>
+                              {cfg.label}
+                            </span>
+                          </div>
+                          <p className="text-xs text-zinc-500 mb-2">{userSkill.skill?.category}</p>
+                          <div className="h-1.5 bg-zinc-700 rounded-full overflow-hidden">
+                            <div className={`h-full ${cfg.bar} ${levelWidths[userSkill.level] ?? "w-1/4"} rounded-full`} />
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleRemove(userSkill.id)}
+                          disabled={removeSkillMutation.isPending}
+                          className="p-2 rounded-lg text-zinc-600 hover:text-rose-400 hover:bg-rose-500/10 transition-all shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 }
