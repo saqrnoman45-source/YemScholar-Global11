@@ -675,7 +675,7 @@ components:
           type: string
         role:
           type: string
-          enum: [student, admin]
+          enum: [student, teacher, admin]
         bio:
           type: ["string", "null"]
         avatarUrl:
@@ -1014,7 +1014,7 @@ components:
       properties:
         role:
           type: string
-          enum: [student, admin]
+          enum: [student, teacher, admin]
         name:
           type: string
 

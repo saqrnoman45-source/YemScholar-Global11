@@ -1,29 +1,30 @@
-import { useEffect } from "wouter";
-import { useLocation } from "wouter";
-import { useGetMe } from "@workspace/api-client-react";
 import { ReactNode } from "react";
+import { Redirect } from "wouter";
+import { useAuth, UserRole } from "@/contexts/auth-context";
+import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requireAdmin?: boolean;
+  roles?: UserRole[];
 }
 
-export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
-  const { data: user, isLoading } = useGetMe();
-  const [, setLocation] = useLocation();
+export function ProtectedRoute({ children, roles }: ProtectedRouteProps) {
+  const { isLoading, isAuthenticated, role } = useAuth();
 
   if (isLoading) {
-    return <div className="flex min-h-[50vh] items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+      </div>
+    );
   }
 
-  if (!user) {
-    setLocation("/login");
-    return null;
+  if (!isAuthenticated) {
+    return <Redirect to="/login" />;
   }
 
-  if (requireAdmin && user.role !== "admin") {
-    setLocation("/dashboard");
-    return null;
+  if (roles && role && !roles.includes(role)) {
+    return <Redirect to="/dashboard" />;
   }
 
   return <>{children}</>;

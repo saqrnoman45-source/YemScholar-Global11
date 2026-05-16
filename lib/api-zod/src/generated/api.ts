@@ -23,7 +23,7 @@ export const GetMeResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['student', 'admin']),
+  "role": zod.enum(['student', 'teacher', 'admin']),
   "bio": zod.string().nullish(),
   "avatarUrl": zod.string().nullish(),
   "createdAt": zod.string()
@@ -52,7 +52,7 @@ export const LoginResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['student', 'admin']),
+  "role": zod.enum(['student', 'teacher', 'admin']),
   "bio": zod.string().nullish(),
   "avatarUrl": zod.string().nullish(),
   "createdAt": zod.string()
@@ -531,7 +531,7 @@ export const ListAdminUsersResponseItem = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['student', 'admin']),
+  "role": zod.enum(['student', 'teacher', 'admin']),
   "bio": zod.string().nullish(),
   "avatarUrl": zod.string().nullish(),
   "createdAt": zod.string()
@@ -547,7 +547,7 @@ export const UpdateAdminUserParams = zod.object({
 })
 
 export const UpdateAdminUserBody = zod.object({
-  "role": zod.enum(['student', 'admin']).optional(),
+  "role": zod.enum(['student', 'teacher', 'admin']).optional(),
   "name": zod.string().optional()
 })
 
@@ -555,7 +555,7 @@ export const UpdateAdminUserResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['student', 'admin']),
+  "role": zod.enum(['student', 'teacher', 'admin']),
   "bio": zod.string().nullish(),
   "avatarUrl": zod.string().nullish(),
   "createdAt": zod.string()
