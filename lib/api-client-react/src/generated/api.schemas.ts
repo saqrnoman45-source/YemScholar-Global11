@@ -300,6 +300,149 @@ export interface ApplicationStatusUpdate {
   status: ApplicationStatusUpdateStatus;
 }
 
+export type LessonType = typeof LessonType[keyof typeof LessonType];
+
+
+export const LessonType = {
+  video: 'video',
+  article: 'article',
+  quiz: 'quiz',
+  pdf: 'pdf',
+} as const;
+
+export interface Lesson {
+  id: number;
+  courseId: number;
+  title: string;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  videoUrl?: string | null;
+  /** @nullable */
+  pdfUrl?: string | null;
+  /** @nullable */
+  content?: string | null;
+  type: LessonType;
+  durationMinutes: number;
+  order: number;
+  isFree: boolean;
+  createdAt: string;
+}
+
+export type LessonInputType = typeof LessonInputType[keyof typeof LessonInputType];
+
+
+export const LessonInputType = {
+  video: 'video',
+  article: 'article',
+  quiz: 'quiz',
+  pdf: 'pdf',
+} as const;
+
+export interface LessonInput {
+  title: string;
+  description?: string;
+  videoUrl?: string;
+  pdfUrl?: string;
+  content?: string;
+  type: LessonInputType;
+  durationMinutes: number;
+  order: number;
+  isFree?: boolean;
+}
+
+export interface LessonProgress {
+  id: number;
+  userId: number;
+  lessonId: number;
+  completed: boolean;
+  watchedSeconds: number;
+  /** @nullable */
+  completedAt?: string | null;
+}
+
+export interface LessonProgressInput {
+  completed: boolean;
+  watchedSeconds?: number;
+}
+
+export type BookmarkType = typeof BookmarkType[keyof typeof BookmarkType];
+
+
+export const BookmarkType = {
+  course: 'course',
+  scholarship: 'scholarship',
+} as const;
+
+export interface Bookmark {
+  id: number;
+  userId: number;
+  type: BookmarkType;
+  referenceId: number;
+  createdAt: string;
+}
+
+export type BookmarkInputType = typeof BookmarkInputType[keyof typeof BookmarkInputType];
+
+
+export const BookmarkInputType = {
+  course: 'course',
+  scholarship: 'scholarship',
+} as const;
+
+export interface BookmarkInput {
+  type: BookmarkInputType;
+  referenceId: number;
+}
+
+export interface Certificate {
+  id: number;
+  userId: number;
+  courseId: number;
+  certificateCode: string;
+  issuedAt: string;
+  /** @nullable */
+  courseName?: string | null;
+}
+
+export interface TestScore {
+  id: number;
+  userId: number;
+  quizTitle: string;
+  score: number;
+  maxScore: number;
+  /** @nullable */
+  timeTakenSeconds?: number | null;
+  completedAt: string;
+}
+
+export interface TestScoreInput {
+  quizTitle: string;
+  score: number;
+  maxScore: number;
+  timeTakenSeconds?: number;
+}
+
+export type AISummarizeInputMode = typeof AISummarizeInputMode[keyof typeof AISummarizeInputMode];
+
+
+export const AISummarizeInputMode = {
+  summarize: 'summarize',
+  quiz: 'quiz',
+  keywords: 'keywords',
+  keypoints: 'keypoints',
+} as const;
+
+export interface AISummarizeInput {
+  text: string;
+  mode: AISummarizeInputMode;
+}
+
+export interface AISummarizeOutput {
+  result: string;
+  mode: string;
+}
+
 export type ListCoursesParams = {
 category?: string;
 level?: string;

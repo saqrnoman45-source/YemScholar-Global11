@@ -11,6 +11,7 @@ export const scholarshipsTable = pgTable("scholarships", {
   category: text("category").notNull(),
   deadline: timestamp("deadline", { withTimezone: true }),
   eligibility: text("eligibility").notNull(),
+  country: text("country"),
   applicationCount: real("application_count").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

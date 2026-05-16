@@ -655,6 +655,226 @@ paths:
               schema:
                 $ref: "#/components/schemas/ScholarshipApplication"
 
+  /courses/{id}/lessons:
+    get:
+      operationId: listCourseLessons
+      tags: [courses]
+      summary: List lessons for a course
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lessons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lesson"
+    post:
+      operationId: createCourseLesson
+      tags: [courses]
+      summary: Create a lesson (teacher/admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonInput"
+      responses:
+        "201":
+          description: Created lesson
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+
+  /lessons/{id}:
+    patch:
+      operationId: updateLesson
+      tags: [courses]
+      summary: Update a lesson (teacher/admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonInput"
+      responses:
+        "200":
+          description: Updated lesson
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+    delete:
+      operationId: deleteLesson
+      tags: [courses]
+      summary: Delete a lesson (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /lessons/{id}/progress:
+    post:
+      operationId: markLessonComplete
+      tags: [courses]
+      summary: Mark a lesson as complete (auth required)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonProgressInput"
+      responses:
+        "200":
+          description: Progress updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonProgress"
+
+  /bookmarks:
+    get:
+      operationId: getMyBookmarks
+      tags: [skills]
+      summary: Get my bookmarks (auth required)
+      responses:
+        "200":
+          description: Bookmarks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Bookmark"
+    post:
+      operationId: addBookmark
+      tags: [skills]
+      summary: Add a bookmark (auth required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookmarkInput"
+      responses:
+        "201":
+          description: Created bookmark
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bookmark"
+
+  /bookmarks/{id}:
+    delete:
+      operationId: removeBookmark
+      tags: [skills]
+      summary: Remove a bookmark (auth required)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /certificates:
+    get:
+      operationId: getMyCertificates
+      tags: [skills]
+      summary: Get my certificates (auth required)
+      responses:
+        "200":
+          description: Certificates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Certificate"
+
+  /test-scores:
+    get:
+      operationId: getMyTestScores
+      tags: [skills]
+      summary: Get my test scores (auth required)
+      responses:
+        "200":
+          description: Test scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TestScore"
+    post:
+      operationId: saveTestScore
+      tags: [skills]
+      summary: Save a test score (auth required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestScoreInput"
+      responses:
+        "201":
+          description: Saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestScore"
+
+  /ai/summarize:
+    post:
+      operationId: aiSummarize
+      tags: [admin]
+      summary: AI text summarization (auth required)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AISummarizeInput"
+      responses:
+        "200":
+          description: AI result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AISummarizeOutput"
+
 components:
   schemas:
     HealthStatus:
@@ -1025,3 +1245,177 @@ components:
           type: string
           enum: [pending, approved, rejected]
       required: [status]
+
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+        courseId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        videoUrl:
+          type: ["string", "null"]
+        pdfUrl:
+          type: ["string", "null"]
+        content:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [video, article, quiz, pdf]
+        durationMinutes:
+          type: integer
+        order:
+          type: integer
+        isFree:
+          type: boolean
+        createdAt:
+          type: string
+      required: [id, courseId, title, type, durationMinutes, order, isFree, createdAt]
+
+    LessonInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        videoUrl:
+          type: string
+        pdfUrl:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [video, article, quiz, pdf]
+        durationMinutes:
+          type: integer
+        order:
+          type: integer
+        isFree:
+          type: boolean
+      required: [title, type, durationMinutes, order]
+
+    LessonProgress:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        lessonId:
+          type: integer
+        completed:
+          type: boolean
+        watchedSeconds:
+          type: integer
+        completedAt:
+          type: ["string", "null"]
+      required: [id, userId, lessonId, completed, watchedSeconds]
+
+    LessonProgressInput:
+      type: object
+      properties:
+        completed:
+          type: boolean
+        watchedSeconds:
+          type: integer
+      required: [completed]
+
+    Bookmark:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        type:
+          type: string
+          enum: [course, scholarship]
+        referenceId:
+          type: integer
+        createdAt:
+          type: string
+      required: [id, userId, type, referenceId, createdAt]
+
+    BookmarkInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [course, scholarship]
+        referenceId:
+          type: integer
+      required: [type, referenceId]
+
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        courseId:
+          type: integer
+        certificateCode:
+          type: string
+        issuedAt:
+          type: string
+        courseName:
+          type: ["string", "null"]
+      required: [id, userId, courseId, certificateCode, issuedAt]
+
+    TestScore:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        quizTitle:
+          type: string
+        score:
+          type: integer
+        maxScore:
+          type: integer
+        timeTakenSeconds:
+          type: ["integer", "null"]
+        completedAt:
+          type: string
+      required: [id, userId, quizTitle, score, maxScore, completedAt]
+
+    TestScoreInput:
+      type: object
+      properties:
+        quizTitle:
+          type: string
+        score:
+          type: integer
+        maxScore:
+          type: integer
+        timeTakenSeconds:
+          type: integer
+      required: [quizTitle, score, maxScore]
+
+    AISummarizeInput:
+      type: object
+      properties:
+        text:
+          type: string
+        mode:
+          type: string
+          enum: [summarize, quiz, keywords, keypoints]
+      required: [text, mode]
+
+    AISummarizeOutput:
+      type: object
+      properties:
+        result:
+          type: string
+        mode:
+          type: string
+      required: [result, mode]

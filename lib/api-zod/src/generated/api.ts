@@ -621,3 +621,196 @@ export const UpdateApplicationStatusResponse = zod.object({
 })
 
 
+/**
+ * @summary List lessons for a course
+ */
+export const ListCourseLessonsParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListCourseLessonsResponseItem = zod.object({
+  "id": zod.number(),
+  "courseId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "videoUrl": zod.string().nullish(),
+  "pdfUrl": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "type": zod.enum(['video', 'article', 'quiz', 'pdf']),
+  "durationMinutes": zod.number(),
+  "order": zod.number(),
+  "isFree": zod.boolean(),
+  "createdAt": zod.string()
+})
+export const ListCourseLessonsResponse = zod.array(ListCourseLessonsResponseItem)
+
+
+/**
+ * @summary Create a lesson (teacher/admin)
+ */
+export const CreateCourseLessonParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const CreateCourseLessonBody = zod.object({
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "videoUrl": zod.string().optional(),
+  "pdfUrl": zod.string().optional(),
+  "content": zod.string().optional(),
+  "type": zod.enum(['video', 'article', 'quiz', 'pdf']),
+  "durationMinutes": zod.number(),
+  "order": zod.number(),
+  "isFree": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Update a lesson (teacher/admin)
+ */
+export const UpdateLessonParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UpdateLessonBody = zod.object({
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "videoUrl": zod.string().optional(),
+  "pdfUrl": zod.string().optional(),
+  "content": zod.string().optional(),
+  "type": zod.enum(['video', 'article', 'quiz', 'pdf']),
+  "durationMinutes": zod.number(),
+  "order": zod.number(),
+  "isFree": zod.boolean().optional()
+})
+
+export const UpdateLessonResponse = zod.object({
+  "id": zod.number(),
+  "courseId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "videoUrl": zod.string().nullish(),
+  "pdfUrl": zod.string().nullish(),
+  "content": zod.string().nullish(),
+  "type": zod.enum(['video', 'article', 'quiz', 'pdf']),
+  "durationMinutes": zod.number(),
+  "order": zod.number(),
+  "isFree": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a lesson (admin)
+ */
+export const DeleteLessonParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Mark a lesson as complete (auth required)
+ */
+export const MarkLessonCompleteParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const MarkLessonCompleteBody = zod.object({
+  "completed": zod.boolean(),
+  "watchedSeconds": zod.number().optional()
+})
+
+export const MarkLessonCompleteResponse = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "lessonId": zod.number(),
+  "completed": zod.boolean(),
+  "watchedSeconds": zod.number(),
+  "completedAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Get my bookmarks (auth required)
+ */
+export const GetMyBookmarksResponseItem = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "type": zod.enum(['course', 'scholarship']),
+  "referenceId": zod.number(),
+  "createdAt": zod.string()
+})
+export const GetMyBookmarksResponse = zod.array(GetMyBookmarksResponseItem)
+
+
+/**
+ * @summary Add a bookmark (auth required)
+ */
+export const AddBookmarkBody = zod.object({
+  "type": zod.enum(['course', 'scholarship']),
+  "referenceId": zod.number()
+})
+
+
+/**
+ * @summary Remove a bookmark (auth required)
+ */
+export const RemoveBookmarkParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+/**
+ * @summary Get my certificates (auth required)
+ */
+export const GetMyCertificatesResponseItem = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "courseId": zod.number(),
+  "certificateCode": zod.string(),
+  "issuedAt": zod.string(),
+  "courseName": zod.string().nullish()
+})
+export const GetMyCertificatesResponse = zod.array(GetMyCertificatesResponseItem)
+
+
+/**
+ * @summary Get my test scores (auth required)
+ */
+export const GetMyTestScoresResponseItem = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "quizTitle": zod.string(),
+  "score": zod.number(),
+  "maxScore": zod.number(),
+  "timeTakenSeconds": zod.number().nullish(),
+  "completedAt": zod.string()
+})
+export const GetMyTestScoresResponse = zod.array(GetMyTestScoresResponseItem)
+
+
+/**
+ * @summary Save a test score (auth required)
+ */
+export const SaveTestScoreBody = zod.object({
+  "quizTitle": zod.string(),
+  "score": zod.number(),
+  "maxScore": zod.number(),
+  "timeTakenSeconds": zod.number().optional()
+})
+
+
+/**
+ * @summary AI text summarization (auth required)
+ */
+export const AiSummarizeBody = zod.object({
+  "text": zod.string(),
+  "mode": zod.enum(['summarize', 'quiz', 'keywords', 'keypoints'])
+})
+
+export const AiSummarizeResponse = zod.object({
+  "result": zod.string(),
+  "mode": zod.string()
+})
+
+

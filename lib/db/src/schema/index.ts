@@ -5,3 +5,8 @@ export * from "./scholarships";
 export * from "./scholarship-applications";
 export * from "./articles";
 export * from "./skills";
+export * from "./lessons";
+export * from "./lesson-progress";
+export * from "./bookmarks";
+export * from "./certificates";
+export * from "./test-scores";

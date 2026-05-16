@@ -74,7 +74,7 @@ export default function ArticleDetail() {
       )}
 
       <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-a:text-primary">
-        <div dangerouslySetContent={{ __html: article.content.replace(/\n/g, '<br/>') }} />
+        <div dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br/>') }} />
         {/* Fallback rendering since content might just be plain text in mock */}
         <p className="text-lg leading-relaxed">{article.content}</p>
       </div>

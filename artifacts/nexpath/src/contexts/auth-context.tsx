@@ -34,7 +34,7 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { data: user, isLoading } = useGetMe({ query: { retry: false } });
+  const { data: user, isLoading } = useGetMe({ query: { retry: false, queryKey: ["getMe"] } });
 
   const role = (user?.role as UserRole) ?? null;
   const value: AuthContextValue = {

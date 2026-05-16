@@ -18,6 +18,9 @@ import Admin from "@/pages/admin";
 import Tests from "@/pages/tests";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
+import Certificates from "@/pages/certificates";
+import Teacher from "@/pages/teacher";
+import AI from "@/pages/ai";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -35,15 +38,15 @@ function Router() {
   return (
     <Switch>
       {/* Public routes */}
-      <Route path="/"              component={Home} />
-      <Route path="/login"         component={Login} />
-      <Route path="/register"      component={Register} />
-      <Route path="/courses"       component={Courses} />
-      <Route path="/courses/:id"   component={CourseDetail} />
-      <Route path="/scholarships"  component={Scholarships} />
+      <Route path="/"                 component={Home} />
+      <Route path="/login"            component={Login} />
+      <Route path="/register"         component={Register} />
+      <Route path="/courses"          component={Courses} />
+      <Route path="/courses/:id"      component={CourseDetail} />
+      <Route path="/scholarships"     component={Scholarships} />
       <Route path="/scholarships/:id" component={ScholarshipDetail} />
-      <Route path="/articles"      component={Articles} />
-      <Route path="/articles/:id"  component={ArticleDetail} />
+      <Route path="/articles"         component={Articles} />
+      <Route path="/articles/:id"     component={ArticleDetail} />
 
       {/* Auth-required: any logged-in user */}
       <Route path="/dashboard">
@@ -54,6 +57,17 @@ function Router() {
       </Route>
       <Route path="/skills">
         {() => <ProtectedRoute><Skills /></ProtectedRoute>}
+      </Route>
+      <Route path="/certificates">
+        {() => <ProtectedRoute><Certificates /></ProtectedRoute>}
+      </Route>
+      <Route path="/ai">
+        {() => <ProtectedRoute><AI /></ProtectedRoute>}
+      </Route>
+
+      {/* Teacher + Admin */}
+      <Route path="/teacher">
+        {() => <ProtectedRoute roles={["teacher", "admin"]}><Teacher /></ProtectedRoute>}
       </Route>
 
       {/* Admin only */}

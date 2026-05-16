@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { useListCourses } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
-import { BookOpen, Users, Clock, Search, SlidersHorizontal } from "lucide-react";
+import { useAuth } from "@/contexts/auth-context";
+import { BookOpen, Users, Clock, Search, SlidersHorizontal, Star, Bookmark, BookmarkCheck, Zap } from "lucide-react";
 
 const levelColors: Record<string, string> = {
   beginner:     "bg-emerald-500/15 text-emerald-400 border-emerald-500/20",
@@ -23,17 +24,68 @@ function getCatColor(cat: string) {
 }
 
 export default function Courses() {
+  const { isAuthenticated } = useAuth();
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("all");
+  const [bookmarked, setBookmarked] = useState<Set<number>>(new Set());
 
   const { data: courses, isLoading } = useListCourses({
     search: search || undefined,
     level: level !== "all" ? level : undefined,
   });
 
+  const featured = courses?.filter(c => c.enrollmentCount > 50).slice(0, 3) ?? [];
+
+  async function toggleBookmark(e: React.MouseEvent, id: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+    const next = new Set(bookmarked);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+      await fetch("/api/bookmarks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "course", referenceId: id }),
+      });
+    }
+    setBookmarked(next);
+  }
+
   return (
     <AppLayout pageTitle="Courses" pageSubtitle="Explore our curriculum designed by industry experts.">
       <div className="p-6 space-y-6">
+
+        {/* Featured section */}
+        {!isLoading && featured.length > 0 && !search && level === "all" && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="w-4 h-4 text-amber-400" />
+              <h2 className="font-semibold text-white text-sm">Featured Courses</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {featured.map(course => (
+                <Link key={course.id} href={`/courses/${course.id}`}>
+                  <div className="relative bg-gradient-to-br from-violet-500/10 to-sky-500/5 border border-violet-500/20 rounded-xl p-4 hover:border-violet-500/40 transition-all cursor-pointer group">
+                    <div className="absolute top-2 right-2 flex items-center gap-0.5 text-amber-400">
+                      <Star className="w-3 h-3 fill-current" />
+                      <span className="text-[11px] font-semibold">{course.rating ?? "4.8"}</span>
+                    </div>
+                    <p className="text-white font-medium text-xs line-clamp-2 mb-2 pr-8">{course.title}</p>
+                    <p className="text-zinc-500 text-[11px] mb-2">{course.instructorName}</p>
+                    <div className="flex items-center gap-2 text-[11px] text-zinc-500">
+                      <span><Users className="w-3 h-3 inline mr-0.5" />{course.enrollmentCount}</span>
+                      <span className={`px-1.5 py-0.5 rounded-md font-medium capitalize ${levelColors[course.level] ?? ""}`}>{course.level}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
@@ -42,7 +94,7 @@ export default function Courses() {
               type="search"
               placeholder="Search courses..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               className="w-full bg-zinc-900 border border-zinc-700/70 rounded-xl pl-9 pr-4 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-violet-500/60 transition-colors"
             />
           </div>
@@ -50,7 +102,7 @@ export default function Courses() {
             <SlidersHorizontal className="w-4 h-4 text-zinc-500 shrink-0" />
             <select
               value={level}
-              onChange={(e) => setLevel(e.target.value)}
+              onChange={e => setLevel(e.target.value)}
               className="bg-zinc-900 border border-zinc-700/70 rounded-xl px-3 py-2 text-sm text-zinc-300 focus:outline-none focus:border-violet-500/60 transition-colors"
             >
               <option value="all">All Levels</option>
@@ -64,7 +116,7 @@ export default function Courses() {
         {/* Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden animate-pulse">
                 <div className="h-44 bg-zinc-800" />
                 <div className="p-5 space-y-3">
@@ -82,20 +134,32 @@ export default function Courses() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {courses?.map((course) => (
+            {courses?.map(course => (
               <Link key={course.id} href={`/courses/${course.id}`}>
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-600 hover:shadow-lg hover:shadow-black/30 transition-all cursor-pointer group h-full flex flex-col">
                   {course.thumbnailUrl ? (
-                    <div className="h-44 overflow-hidden bg-zinc-800">
-                      <img
-                        src={course.thumbnailUrl}
-                        alt={course.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
+                    <div className="h-44 overflow-hidden bg-zinc-800 relative">
+                      <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                      {isAuthenticated && (
+                        <button
+                          onClick={e => toggleBookmark(e, course.id)}
+                          className={`absolute top-2 right-2 p-1.5 rounded-lg backdrop-blur-sm transition-all ${bookmarked.has(course.id) ? "bg-amber-500/80 text-white" : "bg-black/40 text-white/70 hover:bg-black/60"}`}
+                        >
+                          {bookmarked.has(course.id) ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                        </button>
+                      )}
                     </div>
                   ) : (
-                    <div className="h-44 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center">
+                    <div className="h-44 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center relative">
                       <BookOpen className="w-12 h-12 text-zinc-600" />
+                      {isAuthenticated && (
+                        <button
+                          onClick={e => toggleBookmark(e, course.id)}
+                          className={`absolute top-2 right-2 p-1.5 rounded-lg transition-all ${bookmarked.has(course.id) ? "text-amber-400 bg-amber-500/10" : "text-zinc-600 hover:text-amber-400 hover:bg-amber-500/10"}`}
+                        >
+                          {bookmarked.has(course.id) ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+                        </button>
+                      )}
                     </div>
                   )}
 
@@ -107,6 +171,11 @@ export default function Courses() {
                       <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${getCatColor(course.category)}`}>
                         {course.category}
                       </span>
+                      {course.rating && (
+                        <span className="ml-auto flex items-center gap-0.5 text-amber-400 text-[11px] font-semibold">
+                          <Star className="w-3 h-3 fill-current" />{course.rating}
+                        </span>
+                      )}
                     </div>
 
                     <h3 className="font-semibold text-white text-sm line-clamp-2 mb-1 group-hover:text-violet-300 transition-colors">
@@ -116,12 +185,8 @@ export default function Courses() {
                     <p className="text-xs text-zinc-400 line-clamp-2 flex-1">{course.description}</p>
 
                     <div className="flex items-center justify-between text-xs text-zinc-500 border-t border-zinc-800 mt-4 pt-3">
-                      <span className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5" />{course.duration} hrs
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Users className="w-3.5 h-3.5" />{course.enrollmentCount} enrolled
-                      </span>
+                      <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" />{course.duration} hrs</span>
+                      <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" />{course.enrollmentCount} enrolled</span>
                     </div>
                   </div>
                 </div>

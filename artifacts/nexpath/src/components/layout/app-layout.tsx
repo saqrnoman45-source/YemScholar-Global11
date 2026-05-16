@@ -6,20 +6,25 @@ import { useAuth } from "@/contexts/auth-context";
 import {
   LayoutDashboard, BookOpen, GraduationCap, FlaskConical, FileText, Sparkles,
   Settings, Bell, Search, ChevronRight, Menu, X, Zap, ShieldCheck, LogOut, LogIn,
+  Award, Brain, School,
 } from "lucide-react";
 
 type NavItem = { icon: React.ElementType; label: string; href: string };
 
 const studentNav: NavItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard",   href: "/dashboard" },
-  { icon: BookOpen,        label: "Courses",      href: "/courses" },
-  { icon: GraduationCap,  label: "Scholarships", href: "/scholarships" },
-  { icon: FlaskConical,   label: "Tests",         href: "/tests" },
-  { icon: FileText,       label: "Research",      href: "/articles" },
-  { icon: Sparkles,       label: "Skills",        href: "/skills" },
+  { icon: LayoutDashboard, label: "Dashboard",    href: "/dashboard" },
+  { icon: BookOpen,        label: "Courses",       href: "/courses" },
+  { icon: GraduationCap,  label: "Scholarships",  href: "/scholarships" },
+  { icon: FlaskConical,   label: "Tests",          href: "/tests" },
+  { icon: FileText,       label: "Research",       href: "/articles" },
+  { icon: Sparkles,       label: "Skills",         href: "/skills" },
+  { icon: Award,          label: "Certificates",   href: "/certificates" },
+  { icon: Brain,          label: "AI Assistant",   href: "/ai" },
 ];
 
-const teacherExtra: NavItem[] = [];
+const teacherExtra: NavItem[] = [
+  { icon: School, label: "Teacher Dashboard", href: "/teacher" },
+];
 
 const adminExtra: NavItem[] = [
   { icon: ShieldCheck, label: "Admin Console", href: "/admin" },
