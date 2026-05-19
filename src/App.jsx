@@ -1,34 +1,35 @@
 export default function App() {
-  const cards = [
+  const features = [
     {
-      title: "الدورات التعليمية",
-      text: "تعلم البرمجة، الأمن السيبراني، الذكاء الاصطناعي وأكثر.",
-      icon: "📚",
+      icon: "🛡️",
+      title: "الأمن السيبراني",
+      text: "تعلم الاختراق الأخلاقي، الدفاع السيبراني، وتحليل الثغرات."
     },
     {
-      title: "المنح الدراسية",
-      text: "اكتشف فرص المنح حول العالم وقدّم بسهولة.",
+      icon: "🤖",
+      title: "الذكاء الاصطناعي",
+      text: "تلخيص ملفات PDF والفيديوهات ومساعد دراسي ذكي."
+    },
+    {
       icon: "🌍",
+      title: "المنح الدراسية",
+      text: "اكتشف أفضل المنح العالمية المناسبة لك."
     },
     {
-      title: "الأبحاث العلمية",
-      text: "ابحث عن أحدث الأبحاث والموارد الأكاديمية.",
-      icon: "🔬",
-    },
-    {
-      title: "القدرات والمهارات",
-      text: "اختبارات ذكية لتطوير مهاراتك وقدراتك.",
       icon: "🧠",
-    },
+      title: "اختبارات المهارات",
+      text: "قيّم مستواك وطوّر قدراتك بخطط ذكية."
+    }
   ];
 
   return (
     <div
       style={{
-        background: "#020617",
-        color: "white",
         minHeight: "100vh",
-        fontFamily: "Arial, sans-serif",
+        background:
+          "radial-gradient(circle at top, #0f172a, #020617 60%)",
+        color: "white",
+        fontFamily: "Arial, sans-serif"
       }}
     >
       {/* Navbar */}
@@ -37,21 +38,29 @@ export default function App() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "20px 8%",
-          borderBottom: "1px solid #1e293b",
+          padding: "25px 8%",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          backdropFilter: "blur(10px)",
           position: "sticky",
           top: 0,
-          background: "#020617",
+          background: "rgba(2,6,23,0.8)",
+          zIndex: 1000
         }}
       >
-        <h2 style={{ color: "#38bdf8" }}>NexPath</h2>
+        <h2
+          style={{
+            color: "#38bdf8",
+            textShadow: "0 0 20px #38bdf8"
+          }}
+        >
+          NEXPATH
+        </h2>
 
-        <div style={{ display: "flex", gap: "20px", fontSize: "14px" }}>
+        <div style={{ display: "flex", gap: "20px" }}>
           <span>الرئيسية</span>
           <span>الدورات</span>
+          <span>Cyber</span>
           <span>المنح</span>
-          <span>الأبحاث</span>
-          <span>المهارات</span>
         </div>
       </nav>
 
@@ -59,72 +68,119 @@ export default function App() {
       <section
         style={{
           textAlign: "center",
-          padding: "100px 20px",
+          padding: "100px 20px"
         }}
       >
-        <h1
+        <div
           style={{
-            fontSize: "48px",
-            maxWidth: "900px",
-            margin: "auto",
+            display: "inline-block",
+            padding: "10px 20px",
+            border: "1px solid #38bdf8",
+            borderRadius: "999px",
+            marginBottom: "25px",
+            color: "#38bdf8",
+            boxShadow: "0 0 20px rgba(56,189,248,0.4)"
           }}
         >
-          🚀 منصة تعليمية ذكية لتطوير مستقبلك
+          مستقبل التعليم والأمن السيبراني
+        </div>
+
+        <h1
+          style={{
+            fontSize: "55px",
+            maxWidth: "900px",
+            margin: "auto",
+            lineHeight: 1.3
+          }}
+        >
+          🚀 منصة يمنية ذكية لتعلم
+          <span style={{ color: "#38bdf8" }}>
+            {" "}الأمن السيبراني
+          </span>
+          {" "}والتقنية الحديثة
         </h1>
 
         <p
           style={{
             color: "#94a3b8",
-            maxWidth: "700px",
-            margin: "25px auto",
+            maxWidth: "750px",
+            margin: "30px auto",
             fontSize: "18px",
-            lineHeight: 1.8,
+            lineHeight: 1.8
           }}
         >
-          تعلم، ابحث عن منح دراسية، اكتشف الأبحاث العلمية،
-          وطوّر مهاراتك باستخدام الذكاء الاصطناعي.
+          تعلم، اختبر مهاراتك، احصل على منح،
+          واستخدم الذكاء الاصطناعي لتطوير مستقبلك.
         </p>
 
-        <button
+        <div
           style={{
-            padding: "15px 35px",
-            background: "#38bdf8",
-            border: "none",
-            borderRadius: "14px",
-            fontWeight: "bold",
-            cursor: "pointer",
-            fontSize: "16px",
+            display: "flex",
+            gap: "15px",
+            justifyContent: "center",
+            flexWrap: "wrap"
           }}
         >
-          ابدأ الآن
-        </button>
+          <button
+            style={{
+              padding: "15px 35px",
+              background: "#38bdf8",
+              border: "none",
+              borderRadius: "14px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              boxShadow: "0 0 30px rgba(56,189,248,0.5)"
+            }}
+          >
+            ابدأ الآن
+          </button>
+
+          <button
+            style={{
+              padding: "15px 35px",
+              background: "transparent",
+              border: "1px solid #334155",
+              color: "white",
+              borderRadius: "14px",
+              cursor: "pointer"
+            }}
+          >
+            استكشف المنصة
+          </button>
+        </div>
       </section>
 
       {/* Cards */}
       <section
         style={{
-          padding: "50px 8%",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(250px, 1fr))",
           gap: "20px",
+          padding: "40px 8%"
         }}
       >
-        {cards.map((card, index) => (
+        {features.map((item, index) => (
           <div
             key={index}
             style={{
-              background: "#0f172a",
+              background: "rgba(15,23,42,0.8)",
+              border: "1px solid rgba(56,189,248,0.2)",
+              borderRadius: "24px",
               padding: "30px",
-              borderRadius: "20px",
-              border: "1px solid #1e293b",
+              transition: "0.3s",
+              boxShadow:
+                "0 0 20px rgba(56,189,248,0.08)"
             }}
           >
-            <h2 style={{ fontSize: "35px" }}>{card.icon}</h2>
+            <div style={{ fontSize: "40px" }}>
+              {item.icon}
+            </div>
 
-            <h3>{card.title}</h3>
+            <h3>{item.title}</h3>
 
             <p style={{ color: "#94a3b8" }}>
-              {card.text}
+              {item.text}
             </p>
           </div>
         ))}
@@ -135,12 +191,12 @@ export default function App() {
         style={{
           textAlign: "center",
           padding: "40px",
-          borderTop: "1px solid #1e293b",
-          marginTop: "50px",
-          color: "#94a3b8",
+          color: "#64748b",
+          borderTop:
+            "1px solid rgba(255,255,255,0.1)"
         }}
       >
-        © 2026 NexPath - YemScholar Global
+        © 2026 NEXPATH — Cyber Education Platform
       </footer>
     </div>
   );
