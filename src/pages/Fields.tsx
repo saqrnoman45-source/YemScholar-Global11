@@ -1,13 +1,13 @@
 import React from 'react';
 import { fields } from '../data/fields';
 
-export default function FieldsPage() {
+const FieldsPage: React.FC = () => {
   return (
     <div className="fields-page">
       <h1>Fields</h1>
-      <div className="fields-grid">
+      <div className="grid">
         {fields.map((field, index) => (
-          <div key={index} className="field-card">
+          <div key={index} className="card">
             <h2>{field.name}</h2>
             <p>{field.description}</p>
           </div>
@@ -15,4 +15,6 @@ export default function FieldsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default FieldsPage;
