@@ -1,23 +1,24 @@
 import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+
 import Home from "./pages/Home";
+import Explore from "./pages/Explore";
+import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-import ProtectedRoute from "./auth/ProtectedRoute";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Layout>
   );
 }
