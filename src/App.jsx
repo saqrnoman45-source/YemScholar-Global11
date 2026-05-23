@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import ProtectedRoute from "./auth/ProtectedRoute";
-
+import Layout from "./components/Layout.jsx";
 export default function App() {
   return (
     <Routes>
