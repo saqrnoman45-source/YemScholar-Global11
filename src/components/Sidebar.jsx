@@ -13,6 +13,14 @@ export default function Sidebar() {
   return (
     <div
       className="
+w-20 md:w-64
+fixed right-0 top-0
+h-screen
+bg-slate-900
+text-white
+transition-all
+"
+      className="
       w-20 md:w-64
       h-screen
       bg-slate-900
@@ -52,6 +60,9 @@ export default function Sidebar() {
             <span className="text-xl">
               {link.icon}
             </span>
+            <span className="hidden md:inline">
+  {link.name}
+</span>
 
             <span className="hidden md:inline">
               {link.name}
