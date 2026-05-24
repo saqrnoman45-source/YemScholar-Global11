@@ -1,13 +1,5 @@
 import Navbar from "../components/Navbar";
-export default function Home() {
-  return (
-    <div className="p-10">
-      <h1 className="text-5xl font-bold text-blue-400">
-        Tailwind شغال 🚀
-      </h1>
-    </div>
-  );
-}
+
 export default function Home() {
   const categories = [
     {
