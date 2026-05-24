@@ -1,83 +1,84 @@
-
+import { Link } from "react-router-dom";
 
 export default function Home() {
+  const cards = [
+    { icon: "💻", title: "التقنية والسيبر", desc: "تعلم البرمجة والأمن السيبراني" },
+    { icon: "🩺", title: "الطب", desc: "مصادر طبية ودراسة احترافية" },
+    { icon: "🏗️", title: "الهندسة", desc: "جميع تخصصات الهندسة" },
+    { icon: "🌍", title: "اللغات", desc: "تعلم الإنجليزية واللغات العالمية" },
+    { icon: "🧠", title: "المهارات", desc: "تطوير الذات والعمل الحر" },
+    { icon: "🤖", title: "AI مساعد", desc: "تلخيص، شرح، ومساعدة ذكية" },
+  ];
+
   return (
     <div style={styles.page}>
       
-
       {/* HERO */}
       <section style={styles.hero}>
-        <h1 style={styles.title}>
-          🚀 مرحباً بك في NexPath
-        </h1>
-
+        <h1 style={styles.title}>🚀 ابدأ مستقبلك من هنا</h1>
         <p style={styles.subtitle}>
-          منصة تعليم ذكية تجمع الطب، الهندسة، التقنية، اللغات، والمهارات في مكان واحد
+          منصة تعليم ذكية تجمع الدراسة + المهارات + المجتمع + الذكاء الاصطناعي
         </p>
 
-        <div style={styles.buttons}>
-          <button style={styles.primaryBtn}>ابدأ التعلم</button>
-          <button style={styles.secondaryBtn}>استكشف التخصصات</button>
+        <div style={styles.actions}>
+          <Link to="/explore" style={styles.primaryBtn}>
+            استكشف الآن
+          </Link>
+
+          <Link to="/courses" style={styles.secondaryBtn}>
+            الدورات
+          </Link>
         </div>
       </section>
 
       {/* STATS */}
       <section style={styles.stats}>
-        <div style={styles.card}>
-          <h2>🎓 +120 دورة</h2>
-          <p>دورات تعليمية في جميع المجالات</p>
-        </div>
-
-        <div style={styles.card}>
-          <h2>👨‍🎓 +500 طالب</h2>
-          <p>مجتمع متعلم نشط</p>
-        </div>
-
-        <div style={styles.card}>
-          <h2>🤖 AI مساعد</h2>
-          <p>ذكاء اصطناعي للدراسة والتلخيص</p>
-        </div>
+        <div style={styles.statBox}>🎓 120+ دورة</div>
+        <div style={styles.statBox}>👨‍🎓 500+ طالب</div>
+        <div style={styles.statBox}>🤖 AI مساعد ذكي</div>
       </section>
 
-      {/* CATEGORIES */}
+      {/* CARDS */}
       <section style={styles.section}>
         <h2 style={styles.sectionTitle}>📚 التخصصات</h2>
 
         <div style={styles.grid}>
-          <div style={styles.box}>💻 التقنية والأمن السيبراني</div>
-          <div style={styles.box}>🩺 الطب والعلوم الصحية</div>
-          <div style={styles.box}>🏗️ الهندسة</div>
-          <div style={styles.box}>🌍 اللغات</div>
-          <div style={styles.box}>🧠 المهارات والتطوير</div>
-          <div style={styles.box}>🤖 الذكاء الاصطناعي</div>
+          {cards.map((c, i) => (
+            <div key={i} style={styles.card}>
+              <h2>{c.icon}</h2>
+              <h3>{c.title}</h3>
+              <p>{c.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* FOOTER */}
       <footer style={styles.footer}>
-        © 2026 NexPath — منصة تعليم ذكية
+        © 2026 NexPath — مستقبل التعليم الذكي
       </footer>
     </div>
   );
 }
 
-/* STYLES */
+/* 🎨 STYLES */
 const styles = {
   page: {
     background: "#0b1220",
-    minHeight: "100vh",
     color: "white",
-    fontFamily: "sans-serif"
+    minHeight: "100vh",
+    fontFamily: "sans-serif",
+    paddingRight: "260px" // مهم للـ Sidebar
   },
 
   hero: {
     textAlign: "center",
-    padding: "90px 20px"
+    padding: "80px 20px"
   },
 
   title: {
-    fontSize: "50px",
-    marginBottom: "15px"
+    fontSize: "48px",
+    marginBottom: "10px"
   },
 
   subtitle: {
@@ -87,7 +88,7 @@ const styles = {
     margin: "auto"
   },
 
-  buttons: {
+  actions: {
     marginTop: "25px",
     display: "flex",
     justifyContent: "center",
@@ -96,39 +97,38 @@ const styles = {
   },
 
   primaryBtn: {
-    padding: "12px 25px",
     background: "#0ea5e9",
-    border: "none",
+    padding: "12px 25px",
     borderRadius: "10px",
     color: "white",
-    cursor: "pointer"
+    textDecoration: "none"
   },
 
   secondaryBtn: {
-    padding: "12px 25px",
     background: "transparent",
     border: "1px solid #334155",
+    padding: "12px 25px",
     borderRadius: "10px",
     color: "white",
-    cursor: "pointer"
+    textDecoration: "none"
   },
 
   stats: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px,1fr))",
+    display: "flex",
+    justifyContent: "center",
     gap: "15px",
-    padding: "40px 8%"
+    flexWrap: "wrap",
+    padding: "30px"
   },
 
-  card: {
+  statBox: {
     background: "#111827",
-    padding: "20px",
-    borderRadius: "15px",
-    textAlign: "center"
+    padding: "15px 20px",
+    borderRadius: "12px"
   },
 
   section: {
-    padding: "40px 8%"
+    padding: "40px"
   },
 
   sectionTitle: {
@@ -142,11 +142,10 @@ const styles = {
     gap: "15px"
   },
 
-  box: {
+  card: {
     background: "#1f2937",
     padding: "20px",
-    borderRadius: "12px",
-    textAlign: "center"
+    borderRadius: "12px"
   },
 
   footer: {
