@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
+
 
 export default function Home() {
   return (
     <div style={styles.page}>
-      <Navbar />
+      
 
       {/* HERO */}
       <section style={styles.hero}>
