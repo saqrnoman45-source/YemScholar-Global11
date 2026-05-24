@@ -64,12 +64,12 @@ export default function Home() {
 /* 🎨 STYLES */
 const styles = {
   page: {
-    background: "#0b1220",
-    color: "white",
-    minHeight: "100vh",
-    fontFamily: "sans-serif",
-    paddingRight: "260px" // مهم للـ Sidebar
-  },
+  background: "#0b1220",
+  color: "white",
+  minHeight: "100vh",
+  fontFamily: "sans-serif",
+  marginRight: "0"
+},
 
   hero: {
     textAlign: "center",
