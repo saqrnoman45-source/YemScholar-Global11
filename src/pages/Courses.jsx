@@ -2,37 +2,42 @@ import { Link } from "react-router-dom";
 
 export default function Courses() {
   const courses = [
-    {
-      title: "الأمن السيبراني للمبتدئين",
-      desc: "تعلم أساسيات الاختراق الأخلاقي والحماية",
-      level: "مبتدئ",
-      icon: "🛡️"
-    },
-    {
-      title: "تطوير الويب",
-      desc: "React + JavaScript + مشاريع حقيقية",
-      level: "متوسط",
-      icon: "💻"
-    },
-    {
-      title: "الطب الأساسي",
-      desc: "مبادئ التشريح والعلوم الطبية",
-      level: "مبتدئ",
-      icon: "🩺"
-    },
-    {
-      title: "الهندسة الحديثة",
-      desc: "مفاهيم الهندسة العملية والبرمجية",
-      level: "متوسط",
-      icon: "🏗️"
-    },
-    {
-      title: "الذكاء الاصطناعي",
-      desc: "تعلم AI وMachine Learning من الصفر",
-      level: "متقدم",
-      icon: "🤖"
-    }
-  ];
+  {
+    id: "cyber",
+    title: "الأمن السيبراني للمبتدئين",
+    desc: "تعلم أساسيات الاختراق الأخلاقي والحماية",
+    level: "مبتدئ",
+    icon: "🛡️"
+  },
+  {
+    id: "web",
+    title: "تطوير الويب",
+    desc: "React + JavaScript + مشاريع حقيقية",
+    level: "متوسط",
+    icon: "💻"
+  },
+  {
+    id: "med",
+    title: "الطب الأساسي",
+    desc: "مبادئ التشريح والعلوم الطبية",
+    level: "مبتدئ",
+    icon: "🩺"
+  },
+  {
+    id: "eng",
+    title: "الهندسة الحديثة",
+    desc: "مفاهيم الهندسة العملية والبرمجية",
+    level: "متوسط",
+    icon: "🏗️"
+  },
+  {
+    id: "ai",
+    title: "الذكاء الاصطناعي",
+    desc: "تعلم AI وMachine Learning من الصفر",
+    level: "متقدم",
+    icon: "🤖"
+  }
+];
 
   return (
     <div style={styles.page}>
@@ -55,9 +60,10 @@ export default function Courses() {
               {c.level}
             </span>
 
-            <Link to={`/course/${i}`} style={styles.btn}>
-              ابدأ الدورة
-            </Link>
+            <Link to={`/course/${c.id}`} style={styles.btn}>
+             ابدأ الدورة
+              </Link>
+
           </div>
         ))}
       </div>
