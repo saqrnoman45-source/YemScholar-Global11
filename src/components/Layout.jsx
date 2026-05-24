@@ -9,15 +9,12 @@ export default function Layout({ children }) {
       color: "white"
     }}>
       
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Content */}
       <main style={{
         flex: 1,
         marginRight: "260px",
-        padding: "20px",
-        width: "100%"
+        padding: "20px"
       }}>
         {children}
       </main>
