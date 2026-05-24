@@ -35,129 +35,51 @@ export default function Home() {
   ];
 
   return (
-    <div
-      style={{
-        background: "#020617",
-        minHeight: "100vh",
-        color: "white",
-        fontFamily: "sans-serif"
-      }}
-    >
+    <div className="bg-slate-950 min-h-screen text-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section
-        style={{
-          textAlign: "center",
-          padding: "90px 20px"
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "48px",
-            marginBottom: "20px"
-          }}
-        >
+      <section className="text-center py-24 px-5">
+        <h1 className="text-5xl font-bold mb-5">
           🚀 مستقبل التعلم يبدأ من هنا
         </h1>
 
-        <p
-          style={{
-            maxWidth: "700px",
-            margin: "auto",
-            color: "#94a3b8",
-            fontSize: "20px",
-            lineHeight: "1.8"
-          }}
-        >
+        <p className="max-w-3xl mx-auto text-slate-400 text-xl leading-8">
           منصة تعليمية ذكية تجمع الدراسة الجامعية، المهارات،
           الدورات، المجتمع الطلابي، والذكاء الاصطناعي
           في مكان واحد.
         </p>
 
-        <div
-          style={{
-            marginTop: "35px",
-            display: "flex",
-            justifyContent: "center",
-            gap: "15px",
-            flexWrap: "wrap"
-          }}
-        >
-          <button
-            style={{
-              background: "#0ea5e9",
-              border: "none",
-              padding: "15px 30px",
-              borderRadius: "12px",
-              color: "white",
-              fontSize: "18px",
-              cursor: "pointer"
-            }}
-          >
+        <div className="mt-10 flex justify-center gap-4 flex-wrap">
+          <button className="bg-sky-500 px-7 py-4 rounded-xl text-lg hover:scale-105 transition">
             ابدأ التعلم
           </button>
 
-          <button
-            style={{
-              background: "transparent",
-              border: "1px solid #334155",
-              padding: "15px 30px",
-              borderRadius: "12px",
-              color: "white",
-              fontSize: "18px",
-              cursor: "pointer"
-            }}
-          >
+          <button className="border border-slate-700 px-7 py-4 rounded-xl text-lg hover:bg-slate-800 transition">
             استكشف التخصصات
           </button>
         </div>
       </section>
 
-      {/* Categories */}
-      <section
-        style={{
-          padding: "50px 8%"
-        }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            marginBottom: "40px",
-            fontSize: "35px"
-          }}
-        >
+      <section className="px-[8%] py-14">
+        <h2 className="text-center text-4xl mb-10">
           📚 مجالات التعلم
         </h2>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(250px,1fr))",
-            gap: "20px"
-          }}
-        >
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5">
           {categories.map((item, index) => (
             <div
               key={index}
-              style={{
-                background: "#0f172a",
-                borderRadius: "20px",
-                padding: "25px",
-                border: "1px solid rgba(255,255,255,0.08)"
-              }}
+              className="bg-slate-900 rounded-3xl p-6 border border-white/10 hover:scale-105 transition"
             >
-              <h2>{item.icon}</h2>
+              <h2 className="text-4xl mb-3">
+                {item.icon}
+              </h2>
 
-              <h3>{item.title}</h3>
+              <h3 className="text-xl font-bold mb-3">
+                {item.title}
+              </h3>
 
-              <p
-                style={{
-                  color: "#94a3b8",
-                  lineHeight: "1.7"
-                }}
-              >
+              <p className="text-slate-400 leading-7">
                 {item.desc}
               </p>
             </div>
@@ -165,14 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer
-        style={{
-          textAlign: "center",
-          padding: "40px",
-          color: "#64748b"
-        }}
-      >
+      <footer className="text-center py-10 text-slate-500">
         © 2026 NexPath — منصة التعليم الذكية
       </footer>
     </div>
