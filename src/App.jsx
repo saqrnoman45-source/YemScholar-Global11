@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Courses from "./pages/Courses";
+import CourseDetails from "./pages/CourseDetails";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
