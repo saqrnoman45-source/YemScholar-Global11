@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-
+import Sidebar from "./components/Sidebar";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Courses from "./pages/Courses";
