@@ -3,51 +3,59 @@ import { useParams, Link } from "react-router-dom";
 export default function CourseDetails() {
   const { id } = useParams();
 
-  const course = {
-    title: "الأمن السيبراني للمبتدئين",
-    desc: "تعلم أساسيات الاختراق الأخلاقي، الحماية، الشبكات والأمن الرقمي.",
-    lessons: [
-      "مقدمة في الأمن السيبراني",
-      "أنواع الهجمات الإلكترونية",
-      "حماية الأنظمة",
-      "أساسيات الشبكات",
-      "اختبار الاختراق"
-    ]
+  const courses = {
+    cyber: {
+      title: "الأمن السيبراني للمبتدئين",
+      desc: "تعلم الاختراق الأخلاقي والحماية",
+      lessons: ["مقدمة", "الهجمات", "الحماية", "الشبكات"]
+    },
+    web: {
+      title: "تطوير الويب",
+      desc: "React + JS مشاريع",
+      lessons: ["HTML", "CSS", "JS", "React"]
+    },
+    med: {
+      title: "الطب الأساسي",
+      desc: "مبادئ الطب",
+      lessons: ["تشريح", "أعضاء الجسم", "أمراض", "علاج"]
+    },
+    eng: {
+      title: "الهندسة",
+      desc: "الهندسة الحديثة",
+      lessons: ["رياضيات", "فيزياء", "تصميم", "تطبيق"]
+    },
+    ai: {
+      title: "الذكاء الاصطناعي",
+      desc: "Machine Learning",
+      lessons: ["Data", "Models", "Training", "AI Apps"]
+    }
   };
+
+  const course = courses[id];
+
+  if (!course) {
+    return <h2 style={{ color: "white" }}>الدورة غير موجودة</h2>;
+  }
 
   return (
     <div style={styles.page}>
+      <h1>📘 {course.title}</h1>
+      <p>{course.desc}</p>
 
-      {/* HEADER */}
-      <div style={styles.header}>
-        <h1>📘 {course.title}</h1>
-        <p>{course.desc}</p>
-      </div>
+      <h2>📚 الدروس</h2>
+      {course.lessons.map((l, i) => (
+        <div key={i} style={styles.lesson}>
+          📌 {l}
+        </div>
+      ))}
 
-      {/* LESSONS */}
-      <div style={styles.box}>
-        <h2>📚 الدروس</h2>
-
-        {course.lessons.map((l, i) => (
-          <div key={i} style={styles.lesson}>
-            <span>📌</span>
-            <p>{l}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* BUTTON */}
-      <div style={styles.actions}>
-        <Link to="/" style={styles.btn}>
-          ⬅ العودة للرئيسية
-        </Link>
-      </div>
-
+      <Link to="/courses" style={styles.btn}>
+        ⬅ رجوع
+      </Link>
     </div>
   );
 }
 
-/* 🎨 STYLE */
 const styles = {
   page: {
     background: "#0b1220",
@@ -56,35 +64,19 @@ const styles = {
     padding: "40px",
     paddingRight: "260px"
   },
-
-  header: {
-    textAlign: "center",
-    marginBottom: "30px"
-  },
-
-  box: {
-    background: "#111827",
-    padding: "20px",
-    borderRadius: "15px"
-  },
-
   lesson: {
-    display: "flex",
-    gap: "10px",
+    background: "#111827",
     padding: "10px",
-    borderBottom: "1px solid rgba(255,255,255,0.05)"
+    margin: "10px 0",
+    borderRadius: "10px"
   },
-
-  actions: {
-    marginTop: "20px",
-    textAlign: "center"
-  },
-
   btn: {
-    background: "#0ea5e9",
+    display: "inline-block",
+    marginTop: "20px",
     padding: "10px 20px",
-    borderRadius: "10px",
+    background: "#0ea5e9",
     color: "white",
-    textDecoration: "none"
+    textDecoration: "none",
+    borderRadius: "10px"
   }
 };
