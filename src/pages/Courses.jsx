@@ -55,7 +55,7 @@ export default function Courses() {
               {c.level}
             </span>
 
-            <Link to="#" style={styles.btn}>
+            <Link to={`/course/${i}`} style={styles.btn}>
               ابدأ الدورة
             </Link>
           </div>
