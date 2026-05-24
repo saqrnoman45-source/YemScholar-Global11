@@ -1,95 +1,75 @@
 import Navbar from "../components/Navbar";
 
 export default function Home() {
+  const stats = [
+    { num: "10K+", label: "طالب" },
+    { num: "250+", label: "مادة تعليمية" },
+    { num: "15+", label: "تخصص" },
+  ];
+
   const categories = [
-    {
-      icon: "💻",
-      title: "التقنية والأمن السيبراني",
-      desc: "تعلم البرمجة، الشبكات، الأمن السيبراني والذكاء الاصطناعي."
-    },
-    {
-      icon: "🩺",
-      title: "الطب والعلوم الصحية",
-      desc: "مصادر طبية، دورات، شرح ومجتمع للطلاب الصحيين."
-    },
-    {
-      icon: "🏗️",
-      title: "الهندسة",
-      desc: "تخصصات الهندسة المختلفة مع محتوى تدريبي متكامل."
-    },
-    {
-      icon: "🌍",
-      title: "اللغات",
-      desc: "تعلم الإنجليزية، الألمانية، الفرنسية وغيرها."
-    },
-    {
-      icon: "🧠",
-      title: "المهارات والتطوير",
-      desc: "مهارات العمل الحر، التصميم، الإنتاجية والتطوير الشخصي."
-    },
-    {
-      icon: "🤖",
-      title: "المساعد الذكي AI",
-      desc: "تلخيص ملفات PDF، شرح الدروس، ومساعد دراسي ذكي."
-    }
+    { icon: "💻", title: "الأمن السيبراني" },
+    { icon: "🩺", title: "الطب" },
+    { icon: "🏗️", title: "الهندسة" },
+    { icon: "🤖", title: "الذكاء الاصطناعي" },
   ];
 
   return (
-    <div className="bg-slate-950 min-h-screen text-white">
+    <div className="bg-slate-950 text-white min-h-screen">
       <Navbar />
 
-      <section className="text-center py-24 px-5">
-        <h1 className="text-5xl font-bold mb-5">
-          🚀 مستقبل التعلم يبدأ من هنا
+      {/* HERO */}
+      <section className="text-center py-24 px-4">
+        <h1 className="text-5xl font-bold mb-4">
+          🚀 منصة التعلم الذكية
         </h1>
 
-        <p className="max-w-3xl mx-auto text-slate-400 text-xl leading-8">
-          منصة تعليمية ذكية تجمع الدراسة الجامعية، المهارات،
-          الدورات، المجتمع الطلابي، والذكاء الاصطناعي
-          في مكان واحد.
+        <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          تعلم، طور مهاراتك، وابنِ مستقبلك في مكان واحد
+          بطريقة حديثة وسهلة.
         </p>
 
-        <div className="mt-10 flex justify-center gap-4 flex-wrap">
-          <button className="bg-sky-500 px-7 py-4 rounded-xl text-lg hover:scale-105 transition">
-            ابدأ التعلم
+        <div className="mt-8 flex justify-center gap-4 flex-wrap">
+          <button className="bg-sky-500 px-6 py-3 rounded-xl hover:scale-105 transition">
+            ابدأ الآن
           </button>
 
-          <button className="border border-slate-700 px-7 py-4 rounded-xl text-lg hover:bg-slate-800 transition">
-            استكشف التخصصات
+          <button className="border border-slate-700 px-6 py-3 rounded-xl hover:bg-slate-800 transition">
+            استكشف
           </button>
         </div>
       </section>
 
-      <section className="px-[8%] py-14">
-        <h2 className="text-center text-4xl mb-10">
-          📚 مجالات التعلم
+      {/* STATS */}
+      <section className="grid grid-cols-3 gap-4 px-6 max-w-4xl mx-auto text-center">
+        {stats.map((s, i) => (
+          <div key={i} className="bg-slate-900 p-6 rounded-2xl">
+            <h2 className="text-3xl font-bold text-sky-400">
+              {s.num}
+            </h2>
+            <p className="text-slate-400">{s.label}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* CATEGORIES */}
+      <section className="mt-16 px-6">
+        <h2 className="text-3xl text-center mb-10">
+          📚 التخصصات
         </h2>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5">
-          {categories.map((item, index) => (
+        <div className="grid md:grid-cols-4 gap-6">
+          {categories.map((c, i) => (
             <div
-              key={index}
-              className="bg-slate-900 rounded-3xl p-6 border border-white/10 hover:scale-105 transition"
+              key={i}
+              className="bg-slate-900 p-6 rounded-2xl text-center hover:scale-105 transition"
             >
-              <h2 className="text-4xl mb-3">
-                {item.icon}
-              </h2>
-
-              <h3 className="text-xl font-bold mb-3">
-                {item.title}
-              </h3>
-
-              <p className="text-slate-400 leading-7">
-                {item.desc}
-              </p>
+              <div className="text-4xl mb-3">{c.icon}</div>
+              <h3 className="font-bold">{c.title}</h3>
             </div>
           ))}
         </div>
       </section>
-
-      <footer className="text-center py-10 text-slate-500">
-        © 2026 NexPath — منصة التعليم الذكية
-      </footer>
     </div>
   );
 }
