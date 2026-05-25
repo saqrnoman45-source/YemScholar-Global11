@@ -44,10 +44,14 @@ export default function CourseDetails() {
 
       <h2>📚 الدروس</h2>
       {course.lessons.map((l, i) => (
-        <div key={i} style={styles.lesson}>
-          📌 {l}
-        </div>
-      ))}
+  <Link
+    key={i}
+    to={`/course/${id}/${i}`}
+    style={styles.lesson}
+  >
+    📌 {l}
+  </Link>
+))}
 
       <Link to="/courses" style={styles.btn}>
         ⬅ رجوع
