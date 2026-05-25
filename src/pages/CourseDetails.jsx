@@ -69,11 +69,16 @@ const styles = {
     paddingRight: "260px"
   },
   lesson: {
-    background: "#111827",
-    padding: "10px",
-    margin: "10px 0",
-    borderRadius: "10px"
-  },
+  display: "block",
+  background: "#111827",
+  padding: "14px",
+  margin: "10px 0",
+  borderRadius: "10px",
+  textDecoration: "none",
+  color: "white",
+  transition: "0.3s",
+  cursor: "pointer"
+},
   btn: {
     display: "inline-block",
     marginTop: "20px",
