@@ -12,29 +12,21 @@ export default function Sidebar() {
 
   return (
     <div
-      className="
-w-20 md:w-64
-fixed right-0 top-0
-h-screen
-bg-slate-900
-text-white
-transition-all
-"
-      className="
-      w-20 md:w-64
-      h-screen
-      bg-slate-900
-      text-white
-      fixed
-      right-0
-      top-0
-      shadow-lg
-      border-l
-      border-white/10
-      transition-all
-      duration-300
-      "
-    >
+  className="
+  w-20 md:w-64
+  h-screen
+  fixed
+  right-0
+  top-0
+  bg-slate-900
+  text-white
+  shadow-lg
+  border-l
+  border-white/10
+  transition-all
+  duration-300
+  "
+>
       {/* Logo */}
       <div className="p-5 text-center text-xl md:text-2xl font-bold border-b border-white/10">
         🚀
