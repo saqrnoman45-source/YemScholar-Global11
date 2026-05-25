@@ -5,112 +5,69 @@ export default function Lesson() {
   const { courseId, lessonId } = useParams();
 
   const lessons = {
-    cyber: [
-      "مقدمة في الأمن السيبراني",
-      "أنواع الهجمات الإلكترونية",
-      "حماية الأنظمة",
-      "الشبكات الأساسية"
-    ],
-    web: [
-      "HTML",
-      "CSS",
-      "JavaScript",
-      "React"
-    ]
+    cyber: ["مقدمة", "هجمات", "حماية", "شبكات"],
+    web: ["HTML", "CSS", "JS", "React"]
   };
 
-  const currentLesson =
-    lessons[courseId]?.[lessonId] || "الدرس غير موجود";
+  const lesson = lessons[courseId]?.[lessonId];
 
-  const totalLessons =
-    lessons[courseId]?.length || 1;
-
-  const progressKey = `progress-${courseId}`;
-
-  const [completed, setCompleted] =
-    useState([]);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const saved =
-      JSON.parse(localStorage.getItem(progressKey)) || [];
-    setCompleted(saved);
+    const saved = localStorage.getItem(`${courseId}-${lessonId}`);
+    if (saved) setDone(JSON.parse(saved));
   }, []);
 
-  const markComplete = () => {
-    if (!completed.includes(lessonId)) {
-      const updated = [...completed, lessonId];
-
-      setCompleted(updated);
-
-      localStorage.setItem(
-        progressKey,
-        JSON.stringify(updated)
-      );
-    }
+  const markDone = () => {
+    localStorage.setItem(
+      `${courseId}-${lessonId}`,
+      JSON.stringify(true)
+    );
+    setDone(true);
   };
 
-  const progress =
-    Math.round(
-      (completed.length / totalLessons) * 100
-    );
+  if (!lesson) {
+    return <h2 style={{ color: "white" }}>درس غير موجود</h2>;
+  }
 
   return (
     <div style={styles.page}>
 
-      <h1>📘 {currentLesson}</h1>
+      <h1>📘 {lesson}</h1>
+
+      <p style={{ color: "#94a3b8" }}>
+        هذا درس داخل دورة {courseId}
+      </p>
+
+      <div style={styles.box}>
+        <h3>📖 محتوى الدرس</h3>
+        <p>
+          سيتم هنا إضافة فيديو + شرح + ملفات PDF لاحقًا.
+        </p>
+      </div>
 
       {/* Progress */}
       <div style={styles.progressBox}>
-        <h3>
-          تقدمك: {progress}%
-        </h3>
-
-        <div style={styles.progressBar}>
-          <div
-            style={{
-              ...styles.progressFill,
-              width: `${progress}%`
-            }}
-          />
-        </div>
+        <h3>📊 الحالة</h3>
 
         <p>
-          {completed.length} / {totalLessons}
-          دروس مكتملة
+          {done ? "✅ مكتمل" : "⏳ غير مكتمل"}
         </p>
-      </div>
 
-      {/* Lesson */}
-      <div style={styles.box}>
-        <h2>📚 محتوى الدرس</h2>
-
-        <p>
-          هنا سيتم وضع شرح الدرس،
-          الفيديوهات، وملفات PDF لاحقًا.
-        </p>
-      </div>
-
-      {/* Buttons */}
-      <div style={styles.buttons}>
-        <button
-          style={styles.completeBtn}
-          onClick={markComplete}
-        >
-          ✅ تم إنهاء الدرس
+        <button onClick={markDone} style={styles.btn}>
+          ✔ تعليم كمكتمل
         </button>
-
-        <Link
-          to={`/course/${courseId}`}
-          style={styles.backBtn}
-        >
-          ⬅ العودة للدورة
-        </Link>
       </div>
+
+      <Link to={`/course/${courseId}`} style={styles.back}>
+        ⬅ العودة
+      </Link>
 
     </div>
   );
 }
 
+/* 🎨 STYLE */
 const styles = {
   page: {
     background: "#0b1220",
@@ -120,52 +77,34 @@ const styles = {
     paddingRight: "260px"
   },
 
-  progressBox: {
-    background: "#111827",
-    padding: "20px",
-    borderRadius: "15px",
-    marginBottom: "20px"
-  },
-
-  progressBar: {
-    background: "#1f2937",
-    height: "12px",
-    borderRadius: "10px",
-    overflow: "hidden"
-  },
-
-  progressFill: {
-    background: "#0ea5e9",
-    height: "100%"
-  },
-
   box: {
     background: "#111827",
     padding: "20px",
-    borderRadius: "15px"
+    borderRadius: "15px",
+    marginTop: "20px"
   },
 
-  buttons: {
-    display: "flex",
-    gap: "15px",
+  progressBox: {
     marginTop: "20px",
-    flexWrap: "wrap"
+    background: "#1f2937",
+    padding: "15px",
+    borderRadius: "12px"
   },
 
-  completeBtn: {
-    background: "#16a34a",
-    color: "white",
+  btn: {
+    marginTop: "10px",
+    padding: "10px 15px",
+    background: "#0ea5e9",
     border: "none",
-    padding: "10px 20px",
-    borderRadius: "10px",
+    color: "white",
+    borderRadius: "8px",
     cursor: "pointer"
   },
 
-  backBtn: {
-    background: "#0ea5e9",
-    color: "white",
-    padding: "10px 20px",
-    borderRadius: "10px",
+  back: {
+    display: "inline-block",
+    marginTop: "20px",
+    color: "#0ea5e9",
     textDecoration: "none"
   }
 };
