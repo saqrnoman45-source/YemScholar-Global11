@@ -1,8 +1,4 @@
 import { useParams, Link } from "react-router-dom";
-
-export default function CourseDetails() {
-  const { id } = useParams();
-import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function CourseDetails() {
@@ -23,7 +19,7 @@ export default function CourseDetails() {
 
   if (!course) {
     return (
-      <h2 style={{ color: "white" }}>
+      <h2 style={{ color: "white", padding: "40px" }}>
         جاري التحميل...
       </h2>
     );
@@ -35,72 +31,29 @@ export default function CourseDetails() {
 
       <p>{course.desc}</p>
 
-      <h2>
+      <h2 style={{ marginTop: "30px" }}>
         📚 الدروس ({course.lessons.length})
       </h2>
 
-      {course.lessons.map((l, i) => (
+      {course.lessons.map((lesson, i) => (
         <Link
           key={i}
           to={`/course/${id}/${i}`}
           style={styles.lesson}
         >
           <div>
-            <h3>
+            <h3 style={{ margin: 0 }}>
               📖 الدرس {i + 1}
             </h3>
 
             <p style={{ color: "#94a3b8" }}>
-              {l}
+              {lesson}
             </p>
           </div>
 
           <span>▶</span>
         </Link>
       ))}
-
-      <Link
-        to="/courses"
-        style={styles.btn}
-      >
-        ⬅ رجوع
-      </Link>
-    </div>
-  );
-}
-
-  if (!course) {
-    return <h2 style={{ color: "white" }}>الدورة غير موجودة</h2>;
-  }
-
-  return (
-    <div style={styles.page}>
-      <h1>📘 {course.title}</h1>
-      <p>{course.desc}</p>
-
-      <h2 style={{ marginTop: "30px" }}>
-  📚 الدروس ({course.lessons.length})
-</h2>
-
-{course.lessons.map((l, i) => (
-  <Link
-    key={i}
-    to={`/course/${id}/${i}`}
-    style={styles.lesson}
-  >
-    <div>
-      <h3 style={{ margin: 0 }}>
-        📖 الدرس {i + 1}
-      </h3>
-
-      <p style={{ color: "#94a3b8" }}>
-        {l}
-      </p>
-    </div>
-
-    <span>▶</span>
-  </Link>
-))}
 
       <Link to="/courses" style={styles.btn}>
         ⬅ رجوع
@@ -117,19 +70,20 @@ const styles = {
     padding: "40px",
     paddingRight: "260px"
   },
+
   lesson: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  background: "#111827",
-  padding: "18px",
-  margin: "12px 0",
-  borderRadius: "14px",
-  textDecoration: "none",
-  color: "white",
-  border: "1px solid rgba(255,255,255,0.05)",
-  transition: "0.3s"
-},
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: "#111827",
+    padding: "18px",
+    margin: "12px 0",
+    borderRadius: "14px",
+    textDecoration: "none",
+    color: "white",
+    border: "1px solid rgba(255,255,255,0.05)"
+  },
+
   btn: {
     display: "inline-block",
     marginTop: "20px",
