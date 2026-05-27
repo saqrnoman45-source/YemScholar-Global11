@@ -10,7 +10,7 @@ export default function Sidebar() {
   name: "التقدم",
   icon: "📊",
   path: "/progress"
-    } 
+    } ,
     { name: "الملف الشخصي", icon: "👤", path: "/profile" },
     { name: "تسجيل الدخول", icon: "🔐", path: "/login" },
   ];
