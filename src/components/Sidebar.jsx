@@ -7,31 +7,39 @@ export default function Sidebar() {
     { name: "الدورات", icon: "📚", path: "/courses" },
     { name: "لوحة التحكم", icon: "📊", path: "/dashboard" },
     {
-  name: "التقدم",
-  icon: "📊",
-  path: "/progress"
-},
-{ name: "الملف الشخصي", icon: "👤", path: "/profile" },
-    { name: "تسجيل الدخول", icon: "🔐", path: "/login" },
+      name: "التقدم",
+      icon: "📈",
+      path: "/progress"
+    },
+    {
+      name: "الملف الشخصي",
+      icon: "👤",
+      path: "/profile"
+    },
+    {
+      name: "تسجيل الدخول",
+      icon: "🔐",
+      path: "/login"
+    }
   ];
 
   return (
     <div
-  className="
-  w-20 md:w-64
-  h-screen
-  fixed
-  right-0
-  top-0
-  bg-slate-900
-  text-white
-  shadow-lg
-  border-l
-  border-white/10
-  transition-all
-  duration-300
-  "
->
+      className="
+      w-20 md:w-64
+      h-screen
+      fixed
+      right-0
+      top-0
+      bg-slate-900
+      text-white
+      shadow-lg
+      border-l
+      border-white/10
+      transition-all
+      duration-300
+      "
+    >
       {/* Logo */}
       <div className="p-5 text-center text-xl md:text-2xl font-bold border-b border-white/10">
         🚀
@@ -57,9 +65,6 @@ export default function Sidebar() {
             <span className="text-xl">
               {link.icon}
             </span>
-            <span className="hidden md:inline">
-  {link.name}
-</span>
 
             <span className="hidden md:inline">
               {link.name}
