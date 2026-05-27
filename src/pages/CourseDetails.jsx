@@ -11,7 +11,10 @@ export default function CourseDetails() {
       `https://yem-scholar-global11-api-server-othc93r3e-saqr-s-projects11.vercel.app/course/${id}`
     )
       .then((res) => res.json())
-      .then((data) => setCourse(data))
+      .then((data) => {
+  console.log("API DATA:", data);
+  setCourse(data);
+})
       .catch((err) =>
         console.error("API Error:", err)
       );
