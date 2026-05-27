@@ -3,21 +3,20 @@ import { useEffect, useState } from "react";
 
 export default function CourseDetails() {
   const { id } = useParams();
-
   const [course, setCourse] = useState(null);
 
   useEffect(() => {
     fetch(
-      `https://yem-scholar-global11-api-server-othc93r3e-saqr-s-projects11.vercel.app/course/${id}`
+      `https://yem-scholar-global11-api-server-nm8upm5at-saqr-s-projects11.vercel.app/course/${id}`
     )
       .then((res) => res.json())
       .then((data) => {
-  console.log("API DATA:", data);
-  setCourse(data);
-})
-      .catch((err) =>
-        console.error("API Error:", err)
-      );
+        console.log("API DATA:", data);
+        setCourse(data);
+      })
+      .catch((err) => {
+        console.error("API Error:", err);
+      });
   }, [id]);
 
   if (!course) {
@@ -35,10 +34,10 @@ export default function CourseDetails() {
       <p>{course.desc}</p>
 
       <h2 style={{ marginTop: "30px" }}>
-        📚 الدروس ({course.lessons.length})
+        📚 الدروس ({course.lessons?.length || 0})
       </h2>
 
-      {course.lessons.map((lesson, i) => (
+      {course.lessons?.map((lesson, i) => (
         <Link
           key={i}
           to={`/course/${id}/${i}`}
@@ -65,6 +64,7 @@ export default function CourseDetails() {
   );
 }
 
+/* STYLE */
 const styles = {
   page: {
     background: "#0b1220",
