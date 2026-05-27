@@ -42,14 +42,27 @@ export default function CourseDetails() {
       <h1>📘 {course.title}</h1>
       <p>{course.desc}</p>
 
-      <h2>📚 الدروس</h2>
-      {course.lessons.map((l, i) => (
+      <h2 style={{ marginTop: "30px" }}>
+  📚 الدروس ({course.lessons.length})
+</h2>
+
+{course.lessons.map((l, i) => (
   <Link
     key={i}
     to={`/course/${id}/${i}`}
     style={styles.lesson}
   >
-    📌 {l}
+    <div>
+      <h3 style={{ margin: 0 }}>
+        📖 الدرس {i + 1}
+      </h3>
+
+      <p style={{ color: "#94a3b8" }}>
+        {l}
+      </p>
+    </div>
+
+    <span>▶</span>
   </Link>
 ))}
 
@@ -69,15 +82,17 @@ const styles = {
     paddingRight: "260px"
   },
   lesson: {
-  display: "block",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
   background: "#111827",
-  padding: "14px",
-  margin: "10px 0",
-  borderRadius: "10px",
+  padding: "18px",
+  margin: "12px 0",
+  borderRadius: "14px",
   textDecoration: "none",
   color: "white",
-  transition: "0.3s",
-  cursor: "pointer"
+  border: "1px solid rgba(255,255,255,0.05)",
+  transition: "0.3s"
 },
   btn: {
     display: "inline-block",
