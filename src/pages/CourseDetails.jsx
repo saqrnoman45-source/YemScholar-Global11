@@ -6,18 +6,21 @@ export default function CourseDetails() {
   const [course, setCourse] = useState(null);
 
   useEffect(() => {
-    fetch(
-      `https://yem-scholar-global11-api-server-nm8upm5at-saqr-s-projects11.vercel.app/course/${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("API DATA:", data);
-        setCourse(data);
-      })
-      .catch((err) => {
-        console.error("API Error:", err);
-      });
-  }, [id]);
+  fetch(
+    `https://yem-scholar-global11-api-server-nm8upm5at-saqr-s-projects11.vercel.app/course/${id}`
+  )
+    .then((res) => {
+      console.log("STATUS:", res.status);
+      return res.json();
+    })
+    .then((data) => {
+      console.log("DATA:", data);
+      setCourse(data);
+    })
+    .catch((err) => {
+      console.error("ERROR:", err);
+    });
+}, [id]);
 
   if (!course) {
     return (
