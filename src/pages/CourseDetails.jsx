@@ -2,36 +2,72 @@ import { useParams, Link } from "react-router-dom";
 
 export default function CourseDetails() {
   const { id } = useParams();
+import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-  const courses = {
-    cyber: {
-      title: "الأمن السيبراني للمبتدئين",
-      desc: "تعلم الاختراق الأخلاقي والحماية",
-      lessons: ["مقدمة", "الهجمات", "الحماية", "الشبكات"]
-    },
-    web: {
-      title: "تطوير الويب",
-      desc: "React + JS مشاريع",
-      lessons: ["HTML", "CSS", "JS", "React"]
-    },
-    med: {
-      title: "الطب الأساسي",
-      desc: "مبادئ الطب",
-      lessons: ["تشريح", "أعضاء الجسم", "أمراض", "علاج"]
-    },
-    eng: {
-      title: "الهندسة",
-      desc: "الهندسة الحديثة",
-      lessons: ["رياضيات", "فيزياء", "تصميم", "تطبيق"]
-    },
-    ai: {
-      title: "الذكاء الاصطناعي",
-      desc: "Machine Learning",
-      lessons: ["Data", "Models", "Training", "AI Apps"]
-    }
-  };
+export default function CourseDetails() {
+  const { id } = useParams();
 
-  const course = courses[id];
+  const [course, setCourse] = useState(null);
+
+  useEffect(() => {
+    fetch(
+      `https://yem-scholar-global11-api-server-othc93r3e-saqr-s-projects11.vercel.app/course/${id}`
+    )
+      .then((res) => res.json())
+      .then((data) => setCourse(data))
+      .catch((err) =>
+        console.error("API Error:", err)
+      );
+  }, [id]);
+
+  if (!course) {
+    return (
+      <h2 style={{ color: "white" }}>
+        جاري التحميل...
+      </h2>
+    );
+  }
+
+  return (
+    <div style={styles.page}>
+      <h1>📘 {course.title}</h1>
+
+      <p>{course.desc}</p>
+
+      <h2>
+        📚 الدروس ({course.lessons.length})
+      </h2>
+
+      {course.lessons.map((l, i) => (
+        <Link
+          key={i}
+          to={`/course/${id}/${i}`}
+          style={styles.lesson}
+        >
+          <div>
+            <h3>
+              📖 الدرس {i + 1}
+            </h3>
+
+            <p style={{ color: "#94a3b8" }}>
+              {l}
+            </p>
+          </div>
+
+          <span>▶</span>
+        </Link>
+      ))}
+
+      <Link
+        to="/courses"
+        style={styles.btn}
+      >
+        ⬅ رجوع
+      </Link>
+    </div>
+  );
+}
 
   if (!course) {
     return <h2 style={{ color: "white" }}>الدورة غير موجودة</h2>;
