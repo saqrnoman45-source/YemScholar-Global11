@@ -6,6 +6,11 @@ export default function Sidebar() {
     { name: "استكشف", icon: "🔍", path: "/explore" },
     { name: "الدورات", icon: "📚", path: "/courses" },
     { name: "لوحة التحكم", icon: "📊", path: "/dashboard" },
+    {
+  name: "التقدم",
+  icon: "📊",
+  path: "/progress"
+    } 
     { name: "الملف الشخصي", icon: "👤", path: "/profile" },
     { name: "تسجيل الدخول", icon: "🔐", path: "/login" },
   ];
